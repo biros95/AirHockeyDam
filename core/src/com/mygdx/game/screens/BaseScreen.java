@@ -1,12 +1,14 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Created by MarcosPortatil on 18/04/2017.
  */
 
-public class BaseScreen implements Screen {
+public class BaseScreen extends Stage implements Screen {
+
     @Override
     public void show() {
 
