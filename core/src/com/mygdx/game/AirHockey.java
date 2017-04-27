@@ -18,12 +18,13 @@ import com.mygdx.game.screens.SplashScreen;
 public class AirHockey extends Game implements ApplicationListener {
 	public static int WIDTH;
 	public static int HEIGHT;
-	public MyAssetManager manager;
+	private MyAssetManager manager;
 
 	public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, creditsScreen;
 	@Override
 	public void create () {
 		manager = new MyAssetManager();
+		manager.getManager().update();
 		manager.load();
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
@@ -55,8 +56,8 @@ public class AirHockey extends Game implements ApplicationListener {
 		super.resume();
 	}
 
-	public MyAssetManager getManager() {
-		return manager;
+	public AssetManager getManager() {
+		return manager.getManager();
 	}
 
 	public void finishLoading() {
@@ -65,6 +66,7 @@ public class AirHockey extends Game implements ApplicationListener {
 		gameOverScreen = new GameOverScreen(this);
 		setScreen(menuScreen);
 	}
+
 
 
 }
