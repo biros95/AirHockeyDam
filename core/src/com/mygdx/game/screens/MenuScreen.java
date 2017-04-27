@@ -36,18 +36,21 @@ public class MenuScreen extends BaseScreen {
      * The play button you use to jump to the game screen.
      */
     private TextButton play, credits;
-
+    private int height;
+    private int width;
 
     public MenuScreen(final AirHockey game) {
 
         super(game);
 
-        stage = new Stage(new FitViewport(640, 360));
+        height = 180;
+        width = 320;
+
+        stage = new Stage(new FitViewport(height, width));
 
         // Load the skin file. The skin file contains information about the skins. It can be
         // passed to any widget in Scene2D UI to set the style. It just works, amazing.
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-
         // For instance, here you see that I create a new button by telling the label of the
         // button as well as the skin file. The background image for the button is in the skin
         // file.
@@ -79,16 +82,15 @@ public class MenuScreen extends BaseScreen {
         });
 
 
-        // Now I position things on screen. Sorry for making this the hardest part of this screen.
-        // I position things on the screen so that they look centered. This is why I make the
-        // buttons the same size.
-        logo.setPosition(440 - logo.getWidth() / 2, 320 - logo.getHeight());
-        play.setSize(200, 80);
-        credits.setSize(200, 80);
-        play.setPosition(40, 140);
-        credits.setPosition(40, 40);
+        logo.setSize(100, 40);
+        play.setSize(80, 30);
+        credits.setSize(80, 30);
 
-        // Do not forget to add actors to the stage or we wouldn't see anything.
+        logo.setPosition(40, stage.getHeight()-40);
+        play.setPosition(30, logo.getY()-60);
+        credits.setPosition(30, play.getY()-60);
+
+
         stage.addActor(play);
         stage.addActor(logo);
         stage.addActor(credits);
@@ -96,24 +98,16 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void show() {
-        // Now this is important. If you want to be able to click the button, you have to make
-        // the Input system handle input using this Stage. Stages are also InputProcessors. By
-        // making the Stage the default input processor for this game, it is now possible to
-        // click on buttons and even to type on input fields.
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void hide() {
-        // When the screen is no more visible, you have to remember to unset the input processor.
-        // Otherwise, input might act weird, because even if you aren't using this screen, you are
-        // still using the stage for handling input.
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void dispose() {
-        // Dispose assets.
         stage.dispose();
         skin.dispose();
     }

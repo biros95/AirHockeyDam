@@ -45,8 +45,8 @@ public class SplashScreen extends BaseScreen {
     public SplashScreen(AirHockey game) {
         super(game);
 
-        height = 320;
-        width = 180;
+        height = 180;
+        width = 320;
 
 
         // Establecemos el tamaño del Stage
@@ -55,7 +55,7 @@ public class SplashScreen extends BaseScreen {
 
         // Create some loading text using this skin file and position it on screen.
         loading = new Label("Cargando...", skin);
-        loading.setPosition((height/2) - loading.getWidth()+5 / 2, (width/2) - loading.getHeight() / 2);
+        loading.setPosition((height / 2) - loading.getWidth() + 5 / 2, (width / 2) - loading.getHeight() / 2);
         stage.addActor(loading);
     }
 
