@@ -3,45 +3,24 @@ size: 1014, 1782
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-airhockeySprite
+pelota
   rotate: false
   xy: 0, 0
-  size: 185, 120
-  orig: 185, 120
-  offset: 0, 0
-  index: 2
-airhockeySprite
-  rotate: false
-  xy: 185, 0
-  size: 119, 119
-  orig: 119, 119
-  offset: 0, 0
-  index: 3
-airhockeySprite
-  rotate: false
-  xy: 304, 0
-  size: 186, 186
-  orig: 186, 186
-  offset: 0, 0
-  index: 4
-airhockeySprite
-  rotate: false
-  xy: 490, 0
   size: 111, 110
   orig: 111, 110
   offset: 0, 0
-  index: 35
-airhockeySprite
-  rotate: false
-  xy: 601, 0
-  size: 187, 187
-  orig: 187, 187
-  offset: 0, 0
-  index: 36
+  index: -1
 pista
   rotate: false
   xy: 0, 187
   size: 1014, 1595
   orig: 1014, 1595
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 111, 0
+  size: 187, 187
+  orig: 187, 187
   offset: 0, 0
   index: -1
