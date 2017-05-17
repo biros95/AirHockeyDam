@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.AirHockey;
 import com.badlogic.gdx.assets.AssetManager;
@@ -71,6 +73,12 @@ public class MenuScreen extends BaseScreen {
                 game.setScreen(game.gameScreen);
             }
         });
+        play.addCaptureListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(game.gameScreen);
+            }
+        });
 
         credits.addCaptureListener(new ChangeListener() {
             @Override
@@ -86,9 +94,9 @@ public class MenuScreen extends BaseScreen {
         play.setSize(80, 30);
         credits.setSize(80, 30);
 
-        logo.setPosition(40, stage.getHeight()-40);
-        play.setPosition(30, logo.getY()-60);
-        credits.setPosition(30, play.getY()-60);
+        logo.setPosition(40, stage.getHeight() - 40);
+        play.setPosition(30, logo.getY() - 60);
+        credits.setPosition(30, play.getY() - 60);
 
 
         stage.addActor(play);
