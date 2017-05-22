@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.objects.Player;
 import com.mygdx.game.screens.BaseScreen;
 import com.mygdx.game.screens.PlayScreen;
@@ -22,6 +23,7 @@ public class InputHandler implements InputProcessor {
     private Player player;
 
     private Stage stage;
+
     public InputHandler(PlayScreen screen) {
 
         this.playScreen = screen;
@@ -47,20 +49,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        previousY = screenY;
-
-        stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
-        Actor actorHit = stage.hit(stageCoord.x, stageCoord.y, true);
-
-
-
-
-
-
-
-
-        return false;
+        return true;
     }
 
     @Override
@@ -70,7 +59,20 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+
+
+        stageCoord = stage.screenToStageCoordinates(new Vector2(screenX, screenY));
+
+
+        /**
+         * NO SE PUEDE QUEDAR ASÍ, ESE 40 DEBE CAMBIARSE
+         *
+         * se pone -40 porque el jugador va siempre un poco a la derecha y un poco arriba, hay que cambiarlo
+         */
+        player.setX(stageCoord.x - 40);
+        player.setY(stageCoord.y - 40);
+
+        return true;
     }
 
     @Override

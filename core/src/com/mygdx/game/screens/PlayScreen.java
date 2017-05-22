@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,12 +27,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AirHockey;
 import com.mygdx.game.helpers.InputHandler;
 import com.mygdx.game.helpers.MyAssetManager;
+import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
 
-import java.util.ArrayList;
 
-import sun.rmi.runtime.Log;
 
 /**
  * Created by MarcosPortatil on 18/04/2017.
@@ -39,16 +39,15 @@ import sun.rmi.runtime.Log;
 
 public class PlayScreen extends BaseScreen {
     //Creamos el campo y los dos jugadores.
-    Sprite pista, player, player2;
+    Sprite pista, player, player2, disco;
     Player jugador1, jugador2;
+    Disk disk;
     private Stage stage;
     Pista pistaHockey;
 
     SpriteBatch batch, batch2;
     private int height;
     private int width;
-    private float posX;
-    private float posY;
     MyAssetManager myAssetManager;
     ExtendViewport viewport;
     private SpriteBatch spriteBatch;
@@ -75,21 +74,26 @@ public class PlayScreen extends BaseScreen {
 
         spriteBatch = new SpriteBatch();
 
+
+        //Creación de Sprites
         pista = myAssetManager.cargarTextura("pista");
+        disco = myAssetManager.cargarTextura("pelota");
         player = myAssetManager.cargarTextura("player");
         player2 = myAssetManager.cargarTextura("player");
+
+
         pista.setSize(width, height);
 
-        posX = 10;
-        posY = 10;
-
+        //Creación de actores
         jugador1= new Player(player, "Jugador 1");
-        jugador1.setPosition(0,0);
-
+        disk = new Disk(0, 0, disco, pista.getHeight()/2, pista.getWidth()/2);
         pistaHockey = new Pista(pista, "pista");
         pistaHockey.setPosition(0, 0);
-       // stage.addActor(pistaHockey);
+
+
+        stage.addActor(pistaHockey);
         stage.addActor(jugador1);
+        stage.addActor(disk);
 
 
 
@@ -99,15 +103,6 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void show() {
 
-
-        //Obtenemos la imagen de pista que será el fondo del juego
-
-       // stage.addActor(jugador1);
-
-
-        //Posiciones de los jugadores.
-        posX = height / 4;
-        posY = width / 2;
 
        // player2.setPosition(width/2, (height/4)*3);
 
@@ -121,19 +116,18 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        camera2.update();
 
+        batch.setProjectionMatrix(camera.combined);
+        stage.draw();
 
-        batch.setProjectionMatrix(camera2.combined);
-        batch2.setProjectionMatrix(camera.combined);
-
-       stage.draw();
-
+        stage.act(delta);
+        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())){
+            System.out.println("Colision!");
+        }
        // System.out.println(stage.getActors().size);
 
 

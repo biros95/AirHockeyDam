@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -19,68 +20,47 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class Player extends Actor {
     private Sprite sprite;
     private String name;
-    private float posX, posY;
-
+    private Circle circle;
 
     public Player(Sprite sprite, String name) {
         this.sprite = sprite;
         this.name = name;
-        this.posX = sprite.getX();
-        this.posY = sprite.getY();
-        setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        circle = new Circle();
+        setX(0);
+        setY(0);
+        setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
+        circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
         setTouchable(Touchable.enabled);
-        setSize(10f, 10f);
-
-        addListener(new InputListener(){
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if(keycode==Input.Keys.RIGHT){
-                    MoveByAction mba = new MoveByAction();
-                    mba.setAmount(100f, 0f);
-                    mba.setDuration(5f);
-
-                    Player.this.addAction(mba);
-                }
-
-                return true;
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Has tocado el actor!");
-                MoveByAction mba = new MoveByAction();
-                mba.setAmount(100f, 0f);
-                mba.setDuration(5f);
-                Player.this.addAction(mba);
-
-
-                return true;
-
-            }
-
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-            }
-        });
-
 
     }
-    @Override
-    protected void positionChanged() {
-        super.setPosition(getX(), getY());
-        super.positionChanged();
-    }
 
+    /**
+     * Metodo que se encarga de dibujuar el actor,
+     * se ejecuta cada vez que stage.draw() se ejecuta.
+     * @param batch
+     * @param parentAlpha
+     */
     @Override
-    public void draw(Batch batch, float parentAlpha){
+    public void draw(Batch batch, float parentAlpha) {
 
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-        batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+    }
+
+    @Override
+    public void act(float delta) {
+
+        setBounds(getX(), getY(), getWidth(), getHeight());
+        circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
     }
 
 
+    //GETTERS Y SETTERS
+
+
+    public Circle getCircle() {
+        return circle;
+    }
 }
