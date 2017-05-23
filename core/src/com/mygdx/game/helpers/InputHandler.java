@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Player;
 import com.mygdx.game.screens.BaseScreen;
 import com.mygdx.game.screens.PlayScreen;
@@ -21,7 +22,8 @@ public class InputHandler implements InputProcessor {
     private PlayScreen playScreen;
     private Vector2 stageCoord;
     private Player player;
-
+    private Disk disk;
+    double module;
     private Stage stage;
 
     public InputHandler(PlayScreen screen) {
@@ -29,6 +31,7 @@ public class InputHandler implements InputProcessor {
         this.playScreen = screen;
         this.player = screen.getJugador1();
         this.stage = screen.getStage();
+        this.disk = screen.getDisk();
 
     }
 
@@ -71,6 +74,7 @@ public class InputHandler implements InputProcessor {
          */
         player.setX(stageCoord.x - 40);
         player.setY(stageCoord.y - 40);
+
 
         return true;
     }

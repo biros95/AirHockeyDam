@@ -4,6 +4,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactFilter;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
@@ -11,14 +22,23 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
  * Created by MarcosPortatil on 19/04/2017.
  */
 
-public class Disk extends Actor {
+public class Disk extends Actor implements ContactFilter, ContactListener {
+    //Box2D
+    private Body body;
+    private Fixture fixture;
+    private World world;
+    public final float RADIUS = .2f;
+
+    //Libgdx
+
     private float velocity;
     private float maxVelocity;
     private Sprite sprite;
     private float altura;
     private float anchura;
     private Circle circle;
-    public Disk(float velocity, float maxVelocity, Sprite sprite, float altura, float anchura) {
+
+    public Disk(float velocity, float maxVelocity, Sprite sprite, float altura, float anchura, World world) {
         this.velocity = velocity;
         this.maxVelocity = maxVelocity;
         this.sprite = sprite;
@@ -28,7 +48,31 @@ public class Disk extends Actor {
 
         setBounds(anchura, altura, sprite.getWidth(), sprite.getHeight());
         circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
-        setTouchable(Touchable.enabled);
+
+        //Box 2d
+
+        BodyDef bodyDef = new BodyDef();
+        FixtureDef fixtureDef = new FixtureDef();
+
+        // body definition
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(getX(), getY());
+
+        // ball shape
+        CircleShape ballShape = new CircleShape();
+        ballShape.setRadius(RADIUS);
+
+        // fixture definition
+        fixtureDef.shape = ballShape;
+        fixtureDef.friction = 0;
+        fixtureDef.restitution = 1;
+        //fixtureDef.density = 0;
+
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
+
+        ballShape.dispose();
+
     }
 
 
@@ -45,7 +89,9 @@ public class Disk extends Actor {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-        batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+        batch.draw(sprite, body.getPosition().x, body.getPosition().y, getWidth(), getHeight());
+        System.out.println("Posicion del Body: " +body.getPosition().x);
+       // getBody().setTransform(getX(), getY(), 0);
     }
 
     @Override
@@ -60,5 +106,41 @@ public class Disk extends Actor {
 
     public Circle getCircle() {
         return circle;
+    }
+
+    @Override
+    public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
+        return false;
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
+    public Body getBody(){
+        return body;
+    }
+
+    public Fixture getFixture(){
+        return fixture;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 }

@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,14 +47,23 @@ public class PlayScreen extends BaseScreen {
     private Stage stage;
     Pista pistaHockey;
 
+    //Box2D
+
+    public World world;
+
     SpriteBatch batch, batch2;
     private int height;
     private int width;
+
+    private float force;
+    private double module, angle;
     MyAssetManager myAssetManager;
     ExtendViewport viewport;
     private SpriteBatch spriteBatch;
     OrthographicCamera camera, camera2;
     ShapeRenderer shapeRenderer;
+    private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
+
 
 
     public PlayScreen(AirHockey game) {
@@ -62,8 +73,16 @@ public class PlayScreen extends BaseScreen {
         height = Gdx.graphics.getHeight();
         myAssetManager = new MyAssetManager();
         Gdx.input.setInputProcessor(new InputHandler(this));
+
+        angle = 0;
+
+
+
+
         camera = new OrthographicCamera(width, height);
         camera2 = new OrthographicCamera(width*1.5f, height*1.5f);
+
+        this.world = new World(new Vector2(0, 0), true);
 
         shapeRenderer = new ShapeRenderer();
 
@@ -85,8 +104,8 @@ public class PlayScreen extends BaseScreen {
         pista.setSize(width, height);
 
         //Creación de actores
-        jugador1= new Player(player, "Jugador 1");
-        disk = new Disk(0, 0, disco, pista.getHeight()/2, pista.getWidth()/2);
+        jugador1= new Player(player, "Jugador 1", world);
+        disk = new Disk(0, 0, disco, pista.getHeight()/2, pista.getWidth()/2,world);
         pistaHockey = new Pista(pista, "pista");
         pistaHockey.setPosition(0, 0);
 
@@ -99,6 +118,9 @@ public class PlayScreen extends BaseScreen {
 
     }
 
+    public Disk getDisk() {
+        return disk;
+    }
 
     @Override
     public void show() {
@@ -111,10 +133,18 @@ public class PlayScreen extends BaseScreen {
 
     }
 
-
+    public World getWorld() {
+        return world;
+    }
 
     @Override
     public void render(float delta) {
+        world.step(Gdx.graphics.getDeltaTime(), 4, 2);
+
+        disk.getBody().setLinearVelocity(0, 0);
+        disk.getBody().applyForceToCenter(-800f,100f,true);
+
+
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -122,17 +152,43 @@ public class PlayScreen extends BaseScreen {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
-        stage.draw();
+
 
         stage.act(delta);
         if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())){
             System.out.println("Colision!");
         }
+
+
+       // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
+
+        // System.out.println(stage.getActors().size);
+        if (true) {
+            disk.getBody().setLinearVelocity(0, 0);
+            force += 100f;
+            module = Math.sqrt(force * force + 100f * 100f);
+            disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+            angle = 0;
+//           if(MainMenu.getSound())
+//                AssetsLoader.pong.play();
+//        }
+
+            stage.draw();
+
+        }
+    }
+
+
+
        // System.out.println(stage.getActors().size);
 
 
 
-    }
+
 
     @Override
     public void resize(int width, int height) {
