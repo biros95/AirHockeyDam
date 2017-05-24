@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -29,6 +30,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AirHockey;
 import com.mygdx.game.helpers.InputHandler;
 import com.mygdx.game.helpers.MyAssetManager;
+import com.mygdx.game.objects.Bounds;
+import com.mygdx.game.objects.BoundsGround;
 import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
@@ -47,6 +50,8 @@ public class PlayScreen extends BaseScreen {
     private Stage stage;
     Pista pistaHockey;
 
+    private Box2DDebugRenderer debugRenderer;
+
     //Box2D
 
     public World world;
@@ -54,6 +59,9 @@ public class PlayScreen extends BaseScreen {
     SpriteBatch batch, batch2;
     private int height;
     private int width;
+
+    Bounds bounds;
+    BoundsGround boundsGround;
 
     private float force;
     private double module, angle;
@@ -77,13 +85,14 @@ public class PlayScreen extends BaseScreen {
         angle = 0;
 
 
-
+        debugRenderer = new Box2DDebugRenderer();
 
         camera = new OrthographicCamera(width, height);
         camera2 = new OrthographicCamera(width*1.5f, height*1.5f);
 
         this.world = new World(new Vector2(0, 0), true);
-
+        bounds = new Bounds(world);
+        boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
 
         batch = new SpriteBatch();
@@ -139,6 +148,8 @@ public class PlayScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
+
+
         world.step(Gdx.graphics.getDeltaTime(), 4, 2);
 
         disk.getBody().setLinearVelocity(0, 0);
@@ -155,6 +166,7 @@ public class PlayScreen extends BaseScreen {
 
 
         stage.act(delta);
+
         if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())){
             System.out.println("Colision!");
         }
@@ -180,6 +192,14 @@ public class PlayScreen extends BaseScreen {
             stage.draw();
 
         }
+
+
+        debugRenderer.render(world, camera.combined);
+        System.out.println("Posicion del disco: " +disk.getBody().getPosition().x+", "+disk.getBody().getPosition().y);
+        System.out.println("Posición de la tejado: "+bounds.getBody().getPosition().x + ", " +bounds.getBody().getPosition().y);
+        System.out.println("Posicion del suelo: "+ boundsGround.getBody().getPosition().x+ ", " +boundsGround.getBody().getPosition().y);
+        System.out.printf("Posicion del jugador "+ jugador1.getX()+" ,"+jugador1.getY());
+
     }
 
 

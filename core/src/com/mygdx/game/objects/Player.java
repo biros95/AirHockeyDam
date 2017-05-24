@@ -90,7 +90,7 @@ public class Player extends Actor {
 
         batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
 
-        getBody().setTransform(getX(), getY(), 0);
+
     }
 
     @Override

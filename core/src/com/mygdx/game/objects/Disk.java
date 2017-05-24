@@ -66,7 +66,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         fixtureDef.shape = ballShape;
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
-        //fixtureDef.density = 0;
+        fixtureDef.density = 1;
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
@@ -90,7 +90,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
         batch.draw(sprite, body.getPosition().x, body.getPosition().y, getWidth(), getHeight());
-        System.out.println("Posicion del Body: " +body.getPosition().x);
+
        // getBody().setTransform(getX(), getY(), 0);
     }
 
