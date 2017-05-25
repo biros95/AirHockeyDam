@@ -1,3 +1,4 @@
+
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -31,11 +32,10 @@ import com.mygdx.game.AirHockey;
 import com.mygdx.game.helpers.InputHandler;
 import com.mygdx.game.helpers.MyAssetManager;
 import com.mygdx.game.objects.Bounds;
-import com.mygdx.game.objects.BoundsGround;
+//import com.mygdx.game.objects.BoundsGround;
 import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
-
 
 
 /**
@@ -61,7 +61,7 @@ public class PlayScreen extends BaseScreen {
     private int width;
 
     Bounds bounds;
-    BoundsGround boundsGround;
+    //  BoundsGround boundsGround;
 
     private float force;
     private double module, angle;
@@ -73,12 +73,13 @@ public class PlayScreen extends BaseScreen {
     private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
 
 
-
     public PlayScreen(AirHockey game) {
         super(game);
         //Obtenemos la altura y anchura de la pantalla para poder escalar la imagen.
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
+
+        System.out.println("With "+width +"\nHeight "+height);
         myAssetManager = new MyAssetManager();
         Gdx.input.setInputProcessor(new InputHandler(this));
 
@@ -88,11 +89,11 @@ public class PlayScreen extends BaseScreen {
         debugRenderer = new Box2DDebugRenderer();
 
         camera = new OrthographicCamera(width, height);
-        camera2 = new OrthographicCamera(width*1.5f, height*1.5f);
+        camera2 = new OrthographicCamera(width * 1.5f, height * 1.5f);
 
         this.world = new World(new Vector2(0, 0), true);
         bounds = new Bounds(world);
-        boundsGround = new BoundsGround(world);
+        // boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
 
         batch = new SpriteBatch();
@@ -113,8 +114,8 @@ public class PlayScreen extends BaseScreen {
         pista.setSize(width, height);
 
         //Creación de actores
-        jugador1= new Player(player, "Jugador 1", world);
-        disk = new Disk(0, 0, disco, pista.getHeight()/2, pista.getWidth()/2,world);
+        jugador1 = new Player(player, "Jugador 1", world);
+        disk = new Disk(0, 0, disco, pista.getHeight() / 2, pista.getWidth() / 2, world);
         pistaHockey = new Pista(pista, "pista");
         pistaHockey.setPosition(0, 0);
 
@@ -122,7 +123,6 @@ public class PlayScreen extends BaseScreen {
         stage.addActor(pistaHockey);
         stage.addActor(jugador1);
         stage.addActor(disk);
-
 
 
     }
@@ -135,7 +135,7 @@ public class PlayScreen extends BaseScreen {
     public void show() {
 
 
-       // player2.setPosition(width/2, (height/4)*3);
+        // player2.setPosition(width/2, (height/4)*3);
 
 
         Gdx.input.setInputProcessor(new InputHandler(this));
@@ -146,6 +146,11 @@ public class PlayScreen extends BaseScreen {
         return world;
     }
 
+    public Sprite getPista() {
+        return pista;
+    }
+
+
     @Override
     public void render(float delta) {
 
@@ -153,8 +158,7 @@ public class PlayScreen extends BaseScreen {
         world.step(Gdx.graphics.getDeltaTime(), 4, 2);
 
         disk.getBody().setLinearVelocity(0, 0);
-        disk.getBody().applyForceToCenter(-800f,100f,true);
-
+        disk.getBody().applyForceToCenter(-800f, 100f, true);
 
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -167,15 +171,15 @@ public class PlayScreen extends BaseScreen {
 
         stage.act(delta);
 
-        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())){
+        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())) {
             System.out.println("Colision!");
         }
 
 
-       // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
+
+        // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
 
         // System.out.println(stage.getActors().size);
@@ -195,19 +199,17 @@ public class PlayScreen extends BaseScreen {
 
 
         debugRenderer.render(world, camera.combined);
-        System.out.println("Posicion del disco: " +disk.getBody().getPosition().x+", "+disk.getBody().getPosition().y);
-        System.out.println("Posición de la tejado: "+bounds.getBody().getPosition().x + ", " +bounds.getBody().getPosition().y);
-        System.out.println("Posicion del suelo: "+ boundsGround.getBody().getPosition().x+ ", " +boundsGround.getBody().getPosition().y);
-        System.out.printf("Posicion del jugador "+ jugador1.getX()+" ,"+jugador1.getY());
+        /**
+        System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
+        System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
+        //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
+        System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
+         **/
 
     }
 
 
-
-       // System.out.println(stage.getActors().size);
-
-
-
+    // System.out.println(stage.getActors().size);
 
 
     @Override
