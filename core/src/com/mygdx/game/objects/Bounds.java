@@ -25,11 +25,11 @@ public class Bounds implements ContactFilter, ContactListener {
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
 
-        float topPos = 700;
+        float topPos = 620;
 
         // body definition
         bodyDef.type = BodyType.StaticBody;
-        bodyDef.position.set(-100, topPos);
+        bodyDef.position.set(-100, -900);
 
         // ground shape
         ChainShape groundShapeTop = new ChainShape();
@@ -39,7 +39,7 @@ public class Bounds implements ContactFilter, ContactListener {
 				new Vector2(10, 8.35f), new Vector2(-10,8.35f), new Vector2(-10,groundPos)});
 		*/
 
-        groundShapeTop.createChain(new Vector2[] {new Vector2(topPos , 1700), new Vector2(topPos,0)});
+        groundShapeTop.createChain(new Vector2[] {new Vector2(topPos , 4000), new Vector2(topPos,0)});
 
 
 
