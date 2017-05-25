@@ -27,8 +27,8 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
     private Body body;
     private Fixture fixture;
     private World world;
-    public final float RADIUS = .2f;
-
+    public final float RADIUS;
+    public BodyDef bodyDef;
     //Libgdx
 
     private float velocity;
@@ -51,7 +51,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
 
         //Box 2d
 
-        BodyDef bodyDef = new BodyDef();
+        bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
 
         // body definition
@@ -60,7 +60,9 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
 
         // ball shape
         CircleShape ballShape = new CircleShape();
+        RADIUS = sprite.getHeight()/2;
         ballShape.setRadius(RADIUS);
+
 
         // fixture definition
         fixtureDef.shape = ballShape;
@@ -89,9 +91,8 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-        batch.draw(sprite, body.getPosition().x, body.getPosition().y, getWidth(), getHeight());
-
-       // getBody().setTransform(getX(), getY(), 0);
+        batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
+//        body.setTransform(getX(), getY(), 0);
     }
 
     @Override

@@ -184,7 +184,7 @@ public class PlayScreen extends BaseScreen {
 
         // System.out.println(stage.getActors().size);
         if (true) {
-            disk.getBody().setLinearVelocity(0, 0);
+            disk.getBody().setLinearVelocity(150, 0);
             force += 100f;
             module = Math.sqrt(force * force + 100f * 100f);
             disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
