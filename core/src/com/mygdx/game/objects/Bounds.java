@@ -149,4 +149,12 @@ public class Bounds implements ContactFilter, ContactListener {
         // TODO Auto-generated method stub
         return false;
     }
+
+    public Fixture getFixture() {
+        return fixture;
+    }
+
+    public float getHeight() {
+        return height;
+    }
 }

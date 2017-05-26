@@ -57,6 +57,8 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         // body definition
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(getX(), getY());
+        bodyDef.linearDamping = 0.0f;
+        bodyDef.angularDamping = 0.0f;
 
         // ball shape
         CircleShape ballShape = new CircleShape();
@@ -69,7 +71,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         fixtureDef.shape = ballShape;
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
-       // fixtureDef.density = 1;
+        fixtureDef.density = 0;
 
 
 

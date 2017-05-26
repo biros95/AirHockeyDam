@@ -163,7 +163,7 @@ public class PlayScreen extends BaseScreen {
         world.step(Gdx.graphics.getDeltaTime(), 4, 2);
 
         disk.getBody().setLinearVelocity(0, 0);
-        disk.getBody().applyForceToCenter(-800f, 100f, true);
+//        d.getBody().applyForce(-800f,100f,0,0,true);
 
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -225,6 +225,12 @@ public class PlayScreen extends BaseScreen {
                         float diff = disk.getBody().getPosition().y - jugador1.getBody().getPosition().y;
 
                         angle = (diff / jugador1.getHeight() * 45) / 360 * 2 * Math.PI;
+
+                        disk.getBody().setLinearVelocity(0,0);
+                        force += 50f;
+                        module = Math.sqrt(force*force + 100f*100f);
+                        disk.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
+                        angle = 0;
 
                     }
 /**
