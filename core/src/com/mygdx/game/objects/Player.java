@@ -33,19 +33,17 @@ public class Player extends Actor {
     private Body body;
     private Fixture fixture;
     private World world;
-    public final float RADIUS = .2f;
+    public final float RADIUS;
 
     public Player(Sprite sprite, String name, World world) {
         this.sprite = sprite;
         this.name = name;
         circle = new Circle();
-        setX(0);
-        setY(0);
-        setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
-        circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
+        setX(getWidth()/2);
+        setY(getHeight()/2);
+     setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
+       // circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
         setTouchable(Touchable.enabled);
-
-
 
 
 
@@ -57,17 +55,20 @@ public class Player extends Actor {
 
         // body definition
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(50, 50);
+        bodyDef.position.set(getWidth()/2, getHeight()/2);
 
         // ball shape
         CircleShape ballShape = new CircleShape();
+        RADIUS = sprite.getHeight()/2;
         ballShape.setRadius(RADIUS);
+
 
         // fixture definition
         fixtureDef.shape = ballShape;
-        fixtureDef.friction = 0;
-        fixtureDef.restitution = 1;
-        //fixtureDef.density = 0;
+       // fixtureDef.friction = 0;
+        //fixtureDef.restitution = 1;
+        //fixtureDef.density =1;
+
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
@@ -87,8 +88,9 @@ public class Player extends Actor {
 
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+        body.setTransform(getX(), getY(), 0);
+        batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
 
-        batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
 
 
     }

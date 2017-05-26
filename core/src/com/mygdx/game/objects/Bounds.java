@@ -28,6 +28,7 @@ public class Bounds implements ContactFilter, ContactListener {
 
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 1;
         width = Gdx.graphics.getWidth();
      //   height = Gdx.graphics.getHeight();
     //    height = height ;
@@ -38,6 +39,7 @@ public class Bounds implements ContactFilter, ContactListener {
         // body definition
         bodyDef.type = BodyType.StaticBody;
         bodyDef.position.set(-100, -900);
+
 
         // ground shape
         ChainShape groundShapeTop = new ChainShape();

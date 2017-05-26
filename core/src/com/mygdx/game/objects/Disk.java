@@ -65,13 +65,17 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
 
 
         // fixture definition
+
         fixtureDef.shape = ballShape;
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
-        fixtureDef.density = 1;
+       // fixtureDef.density = 1;
+
+
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
+
 
         ballShape.dispose();
 

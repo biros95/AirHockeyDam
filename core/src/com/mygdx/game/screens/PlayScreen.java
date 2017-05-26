@@ -17,6 +17,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -154,7 +159,7 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-
+        world.setGravity(new Vector2(0,0));
         world.step(Gdx.graphics.getDeltaTime(), 4, 2);
 
         disk.getBody().setLinearVelocity(0, 0);
@@ -184,10 +189,10 @@ public class PlayScreen extends BaseScreen {
 
         // System.out.println(stage.getActors().size);
         if (true) {
-            disk.getBody().setLinearVelocity(150, 0);
+           // disk.getBody().setLinearVelocity(150, 0);
             force += 100f;
             module = Math.sqrt(force * force + 100f * 100f);
-            disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+          //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
             angle = 0;
 //           if(MainMenu.getSound())
 //                AssetsLoader.pong.play();
@@ -205,9 +210,55 @@ public class PlayScreen extends BaseScreen {
         //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
         System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
          **/
-
+        createCollisionListener();
     }
+    private void createCollisionListener() {
+        world.setContactListener(new ContactListener() {
 
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+
+
+                    if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
+                        float diff = disk.getBody().getPosition().y - jugador1.getBody().getPosition().y;
+
+                        angle = (diff / jugador1.getHeight() * 45) / 360 * 2 * Math.PI;
+
+                    }
+/**
+                    if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+                        float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
+
+                        angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
+
+                    }
+                **/
+
+
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+    }
 
     // System.out.println(stage.getActors().size);
 
