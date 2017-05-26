@@ -1,4 +1,3 @@
-
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -84,7 +83,7 @@ public class PlayScreen extends BaseScreen {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
 
-        System.out.println("With "+width +"\nHeight "+height);
+        System.out.println("With " + width + "\nHeight " + height);
         myAssetManager = new MyAssetManager();
         Gdx.input.setInputProcessor(new InputHandler(this));
 
@@ -159,10 +158,9 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-        world.setGravity(new Vector2(0,0));
-        world.step(Gdx.graphics.getDeltaTime(), 4, 2);
+        world.step(Gdx.graphics.getDeltaTime(), 100, 100);
 
-        disk.getBody().setLinearVelocity(0, 0);
+        //  disk.getBody().setLinearVelocity(0, 0);
 //        d.getBody().applyForce(-800f,100f,0,0,true);
 
 
@@ -174,44 +172,25 @@ public class PlayScreen extends BaseScreen {
         batch.setProjectionMatrix(camera.combined);
 
 
+        force += 100f;
+        module = Math.sqrt(force * force + 100f * 100f);
+        //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+        angle = 0;
+//
         stage.act(delta);
-
-        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())) {
-            System.out.println("Colision!");
-        }
-
-
-
-        // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-        // System.out.println(stage.getActors().size);
-        if (true) {
-           // disk.getBody().setLinearVelocity(150, 0);
-            force += 100f;
-            module = Math.sqrt(force * force + 100f * 100f);
-          //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-            angle = 0;
-//           if(MainMenu.getSound())
-//                AssetsLoader.pong.play();
-//        }
-
-            stage.draw();
-
-        }
+        stage.draw();
 
 
         debugRenderer.render(world, camera.combined);
         /**
-        System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
-        System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
-        //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
-        System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
+         System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
+         System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
+         //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
+         System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
          **/
         createCollisionListener();
     }
+
     private void createCollisionListener() {
         world.setContactListener(new ContactListener() {
 
@@ -221,29 +200,26 @@ public class PlayScreen extends BaseScreen {
                 Fixture fixtureB = contact.getFixtureB();
 
 
-                    if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
-                        float diff = disk.getBody().getPosition().y - jugador1.getBody().getPosition().y;
 
-                        angle = (diff / jugador1.getHeight() * 45) / 360 * 2 * Math.PI;
 
-                        disk.getBody().setLinearVelocity(0,0);
-                        force += 50f;
-                        module = Math.sqrt(force*force + 100f*100f);
-                        disk.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
-                        angle = 0;
+                if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
+                    System.out.println("ENTRO AL IF");
+                    Vector2 aux = jugador1.getBody().getLinearVelocity();
+                    jugador1.getBody().setLinearVelocity(0, 0);
+                    System.out.println(aux);
+                    disk.getBody().setLinearVelocity(new Vector2(1, 1));
 
-                    }
-/**
-                    if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
-                        float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
 
-                        angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
+                  //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
 
-                    }
-                **/
+
+
+                }
+
 
 
             }
+
 
             @Override
             public void endContact(Contact contact) {

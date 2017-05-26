@@ -54,7 +54,7 @@ public class Player extends Actor {
         this.world = world;
 
         // body definition
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(getWidth()/2, getHeight()/2);
 
         // ball shape
@@ -65,9 +65,10 @@ public class Player extends Actor {
 
         // fixture definition
         fixtureDef.shape = ballShape;
-       // fixtureDef.friction = 0;
-        //fixtureDef.restitution = 1;
-        //fixtureDef.density =1;
+       fixtureDef.friction = 0;
+        fixtureDef.restitution = 1;
+        fixtureDef.density =0;
+
 
 
         body = world.createBody(bodyDef);
