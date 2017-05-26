@@ -24,14 +24,15 @@ public class Bounds2 implements ContactFilter, ContactListener {
 
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
-
-        float topPos = 1150;
+        float groundPos =8.5f;
+        float topPos = 7.5f;
 
         // body definition
         bodyDef.type = BodyType.StaticBody;
-        bodyDef.position.set(-100, topPos);
+      //  bodyDef.position.set(0, groundPos);
 
         // ground shape
+        ChainShape groundShapeBottom = new ChainShape();
         ChainShape groundShapeTop = new ChainShape();
 
 		/*
@@ -39,9 +40,14 @@ public class Bounds2 implements ContactFilter, ContactListener {
 				new Vector2(10, 8.35f), new Vector2(-10,8.35f), new Vector2(-10,groundPos)});
 		*/
 
-        groundShapeTop.createChain(new Vector2[] {new Vector2(topPos , 3000), new Vector2(topPos,200)});
+        groundShapeTop.createChain(new Vector2[] {new Vector2(groundPos,-10), new Vector2(topPos,2000)});;
+        groundShapeTop.createChain(new Vector2[] {new Vector2(topPos,-10), new Vector2(topPos,2000)});
 
+        // fixture definition
+        fixtureDef.shape = groundShapeBottom;
 
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
 
         // fixture definition
         fixtureDef.shape = groundShapeTop;
@@ -50,14 +56,7 @@ public class Bounds2 implements ContactFilter, ContactListener {
         fixture = body.createFixture(fixtureDef);
 
         groundShapeTop.dispose();
-    }
-
-    public Body getBody() {
-        return body;
-    }
-
-    public void setBody(Body body) {
-        this.body = body;
+        groundShapeBottom.dispose();
     }
 
     @Override

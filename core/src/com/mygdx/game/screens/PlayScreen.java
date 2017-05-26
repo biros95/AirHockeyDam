@@ -37,6 +37,7 @@ import com.mygdx.game.helpers.InputHandler;
 import com.mygdx.game.helpers.MyAssetManager;
 import com.mygdx.game.objects.Bounds;
 //import com.mygdx.game.objects.BoundsGround;
+import com.mygdx.game.objects.Bounds2;
 import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
@@ -65,7 +66,7 @@ public class PlayScreen extends BaseScreen {
     private int width;
 
     Bounds bounds;
-    //  BoundsGround boundsGround;
+    Bounds2 bounds2;
 
     private float force;
     private double module, angle;
@@ -90,13 +91,20 @@ public class PlayScreen extends BaseScreen {
         angle = 0;
 
 
+
+
         debugRenderer = new Box2DDebugRenderer();
 
-        camera = new OrthographicCamera(width, height);
-        camera2 = new OrthographicCamera(width * 1.5f, height * 1.5f);
+        float screenWidth = 800;
+        float screenHeight = 400;
+        float gameWidth = 203;
+        float gameHeight = screenHeight / (screenWidth / gameWidth);
 
-        this.world = new World(new Vector2(0, 0), true);
-        bounds = new Bounds(world);
+        camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
+        camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
+
+            this.world = new World(new Vector2(0, 0), true);
+        bounds2 = new Bounds2(world);
         // boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
 
@@ -168,9 +176,9 @@ public class PlayScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-
-        batch.setProjectionMatrix(camera.combined);
-
+        camera2.update();
+        batch.setProjectionMatrix(camera2.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
         force += 100f;
         module = Math.sqrt(force * force + 100f * 100f);
