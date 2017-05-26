@@ -1,3 +1,4 @@
+
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -110,7 +111,7 @@ public class PlayScreen extends BaseScreen {
 
         batch = new SpriteBatch();
         batch2 = new SpriteBatch();
-        viewport = new ExtendViewport(width, height, camera);
+        viewport = new ExtendViewport(width*1.5f, height*1.5f, camera);
         stage = new Stage(viewport, batch);
 
         spriteBatch = new SpriteBatch();
@@ -166,10 +167,9 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-        world.step(Gdx.graphics.getDeltaTime(), 100, 100);
+        world.setGravity(new Vector2(0,0));
 
-        //  disk.getBody().setLinearVelocity(0, 0);
-//        d.getBody().applyForce(-800f,100f,0,0,true);
+//        disk.getBody().setLinearVelocity(0, 0);
 
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -180,13 +180,31 @@ public class PlayScreen extends BaseScreen {
         batch.setProjectionMatrix(camera2.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        force += 100f;
-        module = Math.sqrt(force * force + 100f * 100f);
-        //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-        angle = 0;
-//
         stage.act(delta);
-        stage.draw();
+
+        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())) {
+            System.out.println("Colision!");
+        }
+
+
+
+        // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
+        // System.out.println(stage.getActors().size);
+        if (true) {
+           // disk.getBody().setLinearVelocity(150, 0);
+            force += 100f;
+            module = Math.sqrt(force * force + 100f * 100f);
+          //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+            angle = 0;
+//           if(MainMenu.getSound())
+//                AssetsLoader.pong.play();
+//        }
+            world.step(Gdx.graphics.getDeltaTime(), 1200, 200);
+            stage.draw();
 
 
         debugRenderer.render(world, camera.combined);
@@ -208,26 +226,30 @@ public class PlayScreen extends BaseScreen {
                 Fixture fixtureB = contact.getFixtureB();
 
 
+                    if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
+                        float diff = disk.getBody().getPosition().y - jugador1.getBody().getPosition().y;
 
+                        angle = (diff / jugador1.getHeight() * 45) / 360 * 2 * Math.PI;
 
-                if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
-                    System.out.println("ENTRO AL IF");
-                    Vector2 aux = jugador1.getBody().getLinearVelocity();
-                    jugador1.getBody().setLinearVelocity(0, 0);
-                    System.out.println(aux);
-                    disk.getBody().setLinearVelocity(new Vector2(1, 1));
+                        disk.getBody().setLinearVelocity(0,0);
+                        force += 500000;
+                        module = Math.sqrt(force*force + 100f*100f);
+                        disk.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
+                        angle = 0;
+//                        disk.getBody().applyForce(-650f,650f,0,0,true);
 
+                    }
+/**
+                    if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+                        float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
 
-                  //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+                        angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
 
-
-
-                }
-
+                    }
+                **/
 
 
             }
-
 
             @Override
             public void endContact(Contact contact) {
