@@ -1,5 +1,5 @@
-package com.mygdx.game.objects;
 
+package com.mygdx.game.objects;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,8 +14,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Bounds2 implements ContactFilter, ContactListener {
+public class Bounds2 extends Actor implements ContactFilter, ContactListener {
 
     private Body body;
     private Fixture fixture;
@@ -24,39 +25,86 @@ public class Bounds2 implements ContactFilter, ContactListener {
 
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
-        float groundPos =8.5f;
-        float topPos = 7.5f;
+        fixtureDef.density = 1;
+
+
+        float groundPos = -2.35f;
+        float topGroundPos = -2.5f;
+        float groundPos2 = -2.5f;
+        float topPos =7.35f;
+        float leftWall = -4.65f;
+        float rightWall =14.10f;
 
         // body definition
         bodyDef.type = BodyType.StaticBody;
-      //  bodyDef.position.set(0, groundPos);
+       bodyDef.position.set(0, topGroundPos);
 
         // ground shape
-        ChainShape groundShapeBottom = new ChainShape();
-        ChainShape groundShapeTop = new ChainShape();
+        ChainShape groundShareBottomLeft= new ChainShape();
+        ChainShape groundShareBottomRight = new ChainShape();
 
-		/*
-		groundShape.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(10,groundPos),
-				new Vector2(10, 8.35f), new Vector2(-10,8.35f), new Vector2(-10,groundPos)});
-		*/
+        ChainShape groundShareTopRight = new ChainShape();
+        ChainShape groundShareTopLeft = new ChainShape();
 
-        groundShapeTop.createChain(new Vector2[] {new Vector2(groundPos,-10), new Vector2(topPos,2000)});;
-        groundShapeTop.createChain(new Vector2[] {new Vector2(topPos,-10), new Vector2(topPos,2000)});
+        ChainShape groundShareRight = new ChainShape();
+        ChainShape groundShareLeft = new ChainShape();
+
+
+
+        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(-3.5f,groundPos)});
+        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-10,topPos), new Vector2(-3.5f,topPos)});
+
+        groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
+        groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
+
+
+        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -10), new Vector2(rightWall,10)});
+        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -10), new Vector2(leftWall,10)});
 
         // fixture definition
-        fixtureDef.shape = groundShapeBottom;
+        fixtureDef.shape = groundShareBottomLeft;
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
         // fixture definition
-        fixtureDef.shape = groundShapeTop;
+        fixtureDef.shape = groundShareTopLeft;
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
-        groundShapeTop.dispose();
-        groundShapeBottom.dispose();
+
+        // fixture definition
+        fixtureDef.shape = groundShareBottomRight;
+
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
+
+        // fixture definition
+        fixtureDef.shape = groundShareTopRight;
+
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
+
+
+
+        bodyDef.position.set(leftWall,0 );
+        // fixture definition
+
+        fixtureDef.shape = groundShareLeft;
+
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
+
+        // fixture definition
+        fixtureDef.shape = groundShareRight;
+
+        body = world.createBody(bodyDef);
+        fixture = body.createFixture(fixtureDef);
+
+
+        groundShareTopLeft.dispose();
+        groundShareBottomLeft.dispose();
     }
 
     @Override

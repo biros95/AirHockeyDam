@@ -72,8 +72,8 @@ public class InputHandler implements InputProcessor {
          *
          * se pone -40 porque el jugador va siempre un poco a la derecha y un poco arriba, hay que cambiarlo
          */
-        player.setX(stageCoord.x - 40);
-        player.setY(stageCoord.y - 40);
+        player.setX(stageCoord.x);
+        player.setY(stageCoord.y);
 
 
         return true;

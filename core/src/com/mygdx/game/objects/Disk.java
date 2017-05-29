@@ -57,8 +57,6 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         // body definition
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(getX(), getY());
-        bodyDef.linearDamping = 0.0f;
-        bodyDef.angularDamping = 0.0f;
 
         // ball shape
         CircleShape ballShape = new CircleShape();
@@ -67,11 +65,10 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
 
 
         // fixture definition
-
         fixtureDef.shape = ballShape;
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
-       // fixtureDef.density = 1;
+        //fixtureDef.density = 0;
 
 
 
@@ -91,13 +88,14 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
      * @param batch
      * @param parentAlpha
      */
-    @Override
+  /**  @Override
     public void draw(Batch batch, float parentAlpha) {
 
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         System.out.println( body.getLinearVelocity());
         batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
+
 //        body.setTransform(getX(), getY(), 0);
     }
 
@@ -106,7 +104,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         setBounds(getX(), getY(), getWidth(), getHeight());
         circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
     }
-
+**/
 
     //GETTERS
 

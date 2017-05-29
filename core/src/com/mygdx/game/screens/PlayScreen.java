@@ -1,4 +1,3 @@
-
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -28,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -72,7 +71,7 @@ public class PlayScreen extends BaseScreen {
     private float force;
     private double module, angle;
     MyAssetManager myAssetManager;
-    ExtendViewport viewport;
+    StretchViewport viewport;
     private SpriteBatch spriteBatch;
     OrthographicCamera camera, camera2;
     ShapeRenderer shapeRenderer;
@@ -102,20 +101,19 @@ public class PlayScreen extends BaseScreen {
         float gameHeight = screenHeight / (screenWidth / gameWidth);
 
         camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
-        camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
+        camera2 = new OrthographicCamera(gameWidth, gameHeight);
 
             this.world = new World(new Vector2(0, 0), true);
-        bounds2 = new Bounds2(world);
+        //bounds2 = new Bounds2(world);
         // boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
 
         batch = new SpriteBatch();
         batch2 = new SpriteBatch();
-        viewport = new ExtendViewport(width, height, camera);
+        viewport = new StretchViewport(screenHeight, screenWidth, camera2);
         stage = new Stage(viewport, batch);
 
         spriteBatch = new SpriteBatch();
-
 
         //Creación de Sprites
         pista = myAssetManager.cargarTextura("pista");
@@ -123,13 +121,17 @@ public class PlayScreen extends BaseScreen {
         player = myAssetManager.cargarTextura("player");
         player2 = myAssetManager.cargarTextura("player");
 
+        pista.setSize(screenHeight,screenWidth);
 
-        pista.setSize(width, height);
+        disco.setSize(screenHeight/8, screenHeight/8);
+        player.setSize(screenHeight/5, screenHeight/5);
+        player2.setSize(screenHeight/5, screenHeight/5);
+
 
         //Creación de actores
         jugador1 = new Player(player, "Jugador 1", world);
         disk = new Disk(0, 0, disco, pista.getHeight() / 2, pista.getWidth() / 2, world);
-        pistaHockey = new Pista(pista, "pista");
+        pistaHockey = new Pista(pista, "pista", world);
         pistaHockey.setPosition(0, 0);
 
 
@@ -147,11 +149,11 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void show() {
 
-        Gdx.input.setInputProcessor(stage);
+
         // player2.setPosition(width/2, (height/4)*3);
 
 
-//        Gdx.input.setInputProcessor(new InputHandler(this));
+        Gdx.input.setInputProcessor(new InputHandler(this));
 
     }
 
@@ -167,9 +169,10 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-        world.setGravity(new Vector2(0, 0));
+        world.step(Gdx.graphics.getDeltaTime(), 100, 100);
 
-//        disk.getBody().setLinearVelocity(0, 0);
+        //  disk.getBody().setLinearVelocity(0, 0);
+//        d.getBody().applyForce(-800f,100f,0,0,true);
 
 
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -180,41 +183,25 @@ public class PlayScreen extends BaseScreen {
         batch.setProjectionMatrix(camera2.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+        force += 100f;
+        module = Math.sqrt(force * force + 100f * 100f);
+          //disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+        angle = 0;
+//
         stage.act(delta);
-
-        if (Intersector.overlaps(jugador1.getCircle(), disk.getCircle())) {
-            System.out.println("Colision!");
-        }
+        stage.draw();
 
 
-        // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
-        // System.out.println(stage.getActors().size);
-        if (true) {
-            // disk.getBody().setLinearVelocity(150, 0);
-            force +=555555555555f;
-            module = Math.sqrt(force * force + 100f * 100f);
-            //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-            angle = 0;
-//           if(MainMenu.getSound())
-//                AssetsLoader.pong.play();
-//        }
-            world.step(Gdx.graphics.getDeltaTime(), 1200, 200);
-            stage.draw();
-
-
-            debugRenderer.render(world, camera.combined);
-            /**
-             System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
-             System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
-             //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
-             System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
-             **/
-            createCollisionListener();
-        }
+        debugRenderer.render(world, camera2.combined);
+        debugRenderer.render(world, camera.combined);
+        /**
+         System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
+         System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
+         //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
+         System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
+         **/
+        createCollisionListener();
     }
 
     private void createCollisionListener() {
@@ -226,30 +213,26 @@ public class PlayScreen extends BaseScreen {
                 Fixture fixtureB = contact.getFixtureB();
 
 
-                    if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
-                        float diff = disk.getBody().getPosition().y - jugador1.getBody().getPosition().y;
 
-                        angle = (diff / jugador1.getHeight() * 45) / 360 * 2 * Math.PI;
 
-                        disk.getBody().setLinearVelocity(0,0);
-                        force += 500000;
-                        module = Math.sqrt(force*force + 100f*100f);
-                        disk.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
-                        angle = 0;
-//                        disk.getBody().applyForce(-650f,650f,0,0,true);
+                if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
+                    System.out.println("ENTRO AL IF");
+                    Vector2 aux = jugador1.getBody().getLinearVelocity();
+                    jugador1.getBody().setLinearVelocity(0, 0);
+                    System.out.println(aux);
+                    disk.getBody().setLinearVelocity(new Vector2(1, 1));
 
-                    }
-/**
-                    if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
-                        float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
 
-                        angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
+                  //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
 
-                    }
-                **/
+
+
+                }
+
 
 
             }
+
 
             @Override
             public void endContact(Contact contact) {
