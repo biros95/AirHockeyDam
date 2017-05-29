@@ -64,7 +64,7 @@ public class AirHockey extends Game implements ApplicationListener {
 		menuScreen = new MenuScreen(this);
 		gameScreen = new PlayScreen(this);
 		gameOverScreen = new GameOverScreen(this);
-		setScreen(gameScreen);
+		setScreen(menuScreen);
 	}
 
 

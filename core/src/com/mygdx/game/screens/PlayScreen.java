@@ -104,7 +104,7 @@ public class PlayScreen extends BaseScreen {
         camera2 = new OrthographicCamera(gameWidth, gameHeight);
 
             this.world = new World(new Vector2(0, 0), true);
-        bounds2 = new Bounds2(world);
+        //bounds2 = new Bounds2(world);
         // boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
 
@@ -131,7 +131,7 @@ public class PlayScreen extends BaseScreen {
         //Creación de actores
         jugador1 = new Player(player, "Jugador 1", world);
         disk = new Disk(0, 0, disco, pista.getHeight() / 2, pista.getWidth() / 2, world);
-        pistaHockey = new Pista(pista, "pista");
+        pistaHockey = new Pista(pista, "pista", world);
         pistaHockey.setPosition(0, 0);
 
 
@@ -185,13 +185,15 @@ public class PlayScreen extends BaseScreen {
 
         force += 100f;
         module = Math.sqrt(force * force + 100f * 100f);
-        //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+          //disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
         angle = 0;
 //
         stage.act(delta);
         stage.draw();
 
 
+
+        debugRenderer.render(world, camera2.combined);
         debugRenderer.render(world, camera.combined);
         /**
          System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
