@@ -20,7 +20,7 @@ public class AirHockey extends Game implements ApplicationListener {
 	public static int HEIGHT;
 	private MyAssetManager manager;
 
-	public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, creditsScreen;
+	public BaseScreen loadingScreen; public BaseScreen menuScreen; public BaseScreen gameScreen; public BaseScreen gameOverScreen; public BaseScreen creditsScreen;
 	@Override
 	public void create () {
 		manager = new MyAssetManager();

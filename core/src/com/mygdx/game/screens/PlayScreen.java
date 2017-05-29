@@ -111,7 +111,7 @@ public class PlayScreen extends BaseScreen {
 
         batch = new SpriteBatch();
         batch2 = new SpriteBatch();
-        viewport = new ExtendViewport(width*1.5f, height*1.5f, camera);
+        viewport = new ExtendViewport(width, height, camera);
         stage = new Stage(viewport, batch);
 
         spriteBatch = new SpriteBatch();
@@ -147,11 +147,11 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void show() {
 
-
+        Gdx.input.setInputProcessor(stage);
         // player2.setPosition(width/2, (height/4)*3);
 
 
-        Gdx.input.setInputProcessor(new InputHandler(this));
+//        Gdx.input.setInputProcessor(new InputHandler(this));
 
     }
 
@@ -167,7 +167,7 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
 
-        world.setGravity(new Vector2(0,0));
+        world.setGravity(new Vector2(0, 0));
 
 //        disk.getBody().setLinearVelocity(0, 0);
 
@@ -187,7 +187,6 @@ public class PlayScreen extends BaseScreen {
         }
 
 
-
         // disk.getSprite().setPosition(disk.getBody().getPosition().x, disk.getBody().getPosition().y);
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -195,10 +194,10 @@ public class PlayScreen extends BaseScreen {
 
         // System.out.println(stage.getActors().size);
         if (true) {
-           // disk.getBody().setLinearVelocity(150, 0);
-            force += 100f;
+            // disk.getBody().setLinearVelocity(150, 0);
+            force +=555555555555f;
             module = Math.sqrt(force * force + 100f * 100f);
-          //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
+            //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
             angle = 0;
 //           if(MainMenu.getSound())
 //                AssetsLoader.pong.play();
@@ -207,14 +206,15 @@ public class PlayScreen extends BaseScreen {
             stage.draw();
 
 
-        debugRenderer.render(world, camera.combined);
-        /**
-         System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
-         System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
-         //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
-         System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
-         **/
-        createCollisionListener();
+            debugRenderer.render(world, camera.combined);
+            /**
+             System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
+             System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
+             //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
+             System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
+             **/
+            createCollisionListener();
+        }
     }
 
     private void createCollisionListener() {

@@ -1,132 +1,155 @@
 package com.mygdx.game.screens;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.AirHockey;
 import com.badlogic.gdx.assets.AssetManager;
+import com.mygdx.game.helpers.InputHandler;
 import com.mygdx.game.helpers.MyAssetManager;
 
 /**
  * Created by MarcosPortatil on 18/04/2017.
  */
 
-public class MenuScreen extends BaseScreen {
+public class MenuScreen extends  BaseScreen implements Screen {
+    AirHockey game;
+    Texture Tboton1Jugador,Tboton2Jugadores,TbotonConfiguracion,TbotonSalir,Tlogo;
+    SpriteBatch batch;
+    public final MyAssetManager assetManager = new MyAssetManager();
+    float ancho = Gdx.graphics.getWidth();
+    float altura = Gdx.graphics.getHeight();
+    Stage stage;
+    ImageButton boton1Jugador;
+    ImageButton boton2Jugadores,botonConfiguracion,botonSalir,logo;
 
-    private Stage stage;
-
-    /**
-     * The skin that we use to set the style of the buttons.
-     */
-    private Skin skin;
-
-    /**
-     * The logo image you see on top of the screen.
-     */
-    private Image logo;
-
-    /**
-     * The play button you use to jump to the game screen.
-     */
-    private TextButton play, credits;
-    private int height;
-    private int width;
 
     public MenuScreen(final AirHockey game) {
-
         super(game);
-
-        height = 180;
-        width = 320;
-
-        stage = new Stage(new FitViewport(height, width));
-
-        // Load the skin file. The skin file contains information about the skins. It can be
-        // passed to any widget in Scene2D UI to set the style. It just works, amazing.
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        // For instance, here you see that I create a new button by telling the label of the
-        // button as well as the skin file. The background image for the button is in the skin
-        // file.
-        play = new TextButton("Jugar", skin);
-        credits = new TextButton("Opciones", skin);
-
-        // Also, create an image. Images are actors that only display some texture. Useful if you
-        // want to display a texture in a Scene2D based screen but you don't want to rewrite code.
-        logo = new Image(game.getManager().get("logo.png", Texture.class));
-
-        // Add capture listeners. Capture listeners have one method, changed, that is executed
-        // when the button is pressed or when the user interacts somehow with the widget. They are
-        // cool because they let you execute some code when you press them.
-        play.addCaptureListener(new ChangeListener() {
+        assetManager.load();
+        //BOTON DE UN JUGADOR
+        Tboton1Jugador = new Texture("1Player.png");
+        TextureRegion textureRegion1jugador = new TextureRegion(Tboton1Jugador);
+        TextureRegionDrawable drawable1Jugador = new TextureRegionDrawable(textureRegion1jugador);
+        boton1Jugador = new ImageButton(drawable1Jugador);
+        boton1Jugador.setPosition(300,150);
+        boton1Jugador.setBounds(ancho/2-150,altura/2 - Tboton1Jugador.getHeight(), 300, 300);
+        boton1Jugador.getImageCell().expand().fill();
+        boton1Jugador.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Take me to the game screen!
                 game.setScreen(game.gameScreen);
             }
         });
-        play.addCaptureListener(new ClickListener() {
+        //BOTON DE DOS JUGADORES
+        Tboton2Jugadores = new Texture("2Player.png");
+        TextureRegion textureRegion1jugador2 = new TextureRegion(Tboton2Jugadores);
+        TextureRegionDrawable drawable1Jugador2 = new TextureRegionDrawable(textureRegion1jugador2);
+        boton2Jugadores = new ImageButton(drawable1Jugador2);
+        boton2Jugadores.setPosition(ancho/2 - 100,altura/2 - Tboton2Jugadores.getHeight() - 300);
+        boton2Jugadores.setBounds(ancho/2 - 100,altura/2 - Tboton2Jugadores.getHeight() - 150, 300, 300);
+        boton2Jugadores.getImageCell().expand().fill();
+
+        boton2Jugadores.addCaptureListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
+                // Take me to the game screen!
                 game.setScreen(game.gameScreen);
             }
         });
 
-        credits.addCaptureListener(new ChangeListener() {
+        //BOTON CONFIGURACION
+        TbotonConfiguracion = new Texture("Options.png");
+        TextureRegion textureRegion1jugador3 = new TextureRegion(TbotonConfiguracion);
+        TextureRegionDrawable drawable1Jugador3 = new TextureRegionDrawable(textureRegion1jugador3);
+        botonConfiguracion = new ImageButton(drawable1Jugador3);
+        botonConfiguracion.setPosition( ancho / 2f - 100f,altura/2 - TbotonConfiguracion.getHeight()-1);
+        botonConfiguracion.setBounds( ancho / 2f - 100f,altura/2 - TbotonConfiguracion.getHeight()-120, 300, 300);
+        botonConfiguracion.getImageCell().expand().fill();
+
+        botonConfiguracion.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.creditsScreen);
+                // Take me to the game screen!
+                game.setScreen(game.gameScreen);
             }
-
-
         });
 
+        //LOGOTIPO
+        Tlogo = new Texture("LogoPequeño.png");
+        TextureRegion textureRegion1jugador4 = new TextureRegion(Tlogo);
+        TextureRegionDrawable drawable1Jugador4 = new TextureRegionDrawable(textureRegion1jugador4);
+        logo = new ImageButton(drawable1Jugador4);
+        logo.setPosition(ancho - ancho/2-Tlogo.getWidth(),altura/2);
+        logo.setBounds(ancho/2, altura/2+ Tlogo.getHeight(), 300, 300);
+        logo.getImageCell().expand().fill();
 
-        logo.setSize(100, 40);
-        play.setSize(80, 30);
-        credits.setSize(80, 30);
+        //BOTON DE SALIR
+        TbotonSalir = new Texture("button.png");
+        TextureRegion textureRegion1jugador5 = new TextureRegion(TbotonSalir);
+        TextureRegionDrawable drawable1Jugador5 = new TextureRegionDrawable(textureRegion1jugador5);
+        botonSalir = new ImageButton(drawable1Jugador5);
+        botonSalir.setPosition(ancho/2 - 100,altura/2 - TbotonSalir.getHeight() - 450);
+        botonSalir.setBounds(ancho/2 - 100,altura/2 - TbotonSalir.getHeight() - 450, 300, 300);
+        botonSalir.getImageCell().expand().fill();
 
-        logo.setPosition(40, stage.getHeight() - 40);
-        play.setPosition(30, logo.getY() - 60);
-        credits.setPosition(30, play.getY() - 60);
-
-
-        stage.addActor(play);
-        stage.addActor(logo);
-        stage.addActor(credits);
+        botonSalir.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Take me to the game screen!
+                game.setScreen(game.gameScreen);
+            }
+        });
+        stage = new Stage(new FitViewport(ancho,altura));
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void hide() {
-        Gdx.input.setInputProcessor(null);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        skin.dispose();
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.2f, 0.3f, 0.5f, 1f);
+        Gdx.input.setInputProcessor(stage);
+        Gdx.gl.glClearColor(255,255,255,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
+
+        stage.addActor(boton1Jugador);
         stage.draw();
+        System.out.println("Posicion x: " + boton1Jugador.getX());
+        stage.addActor(boton2Jugadores);
+        stage.addActor(botonConfiguracion);
+        stage.addActor(botonSalir);
+        stage.addActor(logo);
+        stage.draw();
+//        stage.dispose();
+
+
+
+
     }
+
+
 
     @Override
     public void resize(int width, int height) {
@@ -143,5 +166,14 @@ public class MenuScreen extends BaseScreen {
 
     }
 
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 
 }
