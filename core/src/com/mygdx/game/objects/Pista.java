@@ -23,8 +23,7 @@ public class Pista extends Actor {
         this.posX = sprite.getX();
         this.posY = sprite.getY();
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
-        setHeight(posY);
-        setHeight(posX);
+
 
     }
 
@@ -34,6 +33,6 @@ public class Pista extends Actor {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-        batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(sprite, 0, 0, sprite.getWidth(), sprite.getHeight());
     }
 }

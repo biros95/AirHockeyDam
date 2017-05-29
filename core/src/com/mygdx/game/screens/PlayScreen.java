@@ -27,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -71,7 +71,7 @@ public class PlayScreen extends BaseScreen {
     private float force;
     private double module, angle;
     MyAssetManager myAssetManager;
-    ExtendViewport viewport;
+    StretchViewport viewport;
     private SpriteBatch spriteBatch;
     OrthographicCamera camera, camera2;
     ShapeRenderer shapeRenderer;
@@ -101,7 +101,7 @@ public class PlayScreen extends BaseScreen {
         float gameHeight = screenHeight / (screenWidth / gameWidth);
 
         camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
-        camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
+        camera2 = new OrthographicCamera(gameWidth, gameHeight);
 
             this.world = new World(new Vector2(0, 0), true);
         bounds2 = new Bounds2(world);
@@ -110,11 +110,10 @@ public class PlayScreen extends BaseScreen {
 
         batch = new SpriteBatch();
         batch2 = new SpriteBatch();
-        viewport = new ExtendViewport(width, height, camera);
+        viewport = new StretchViewport(screenHeight, screenWidth, camera2);
         stage = new Stage(viewport, batch);
 
         spriteBatch = new SpriteBatch();
-
 
         //Creación de Sprites
         pista = myAssetManager.cargarTextura("pista");
@@ -122,8 +121,12 @@ public class PlayScreen extends BaseScreen {
         player = myAssetManager.cargarTextura("player");
         player2 = myAssetManager.cargarTextura("player");
 
+        pista.setSize(screenHeight,screenWidth);
 
-        pista.setSize(width, height);
+        disco.setSize(screenHeight/8, screenHeight/8);
+        player.setSize(screenHeight/5, screenHeight/5);
+        player2.setSize(screenHeight/5, screenHeight/5);
+
 
         //Creación de actores
         jugador1 = new Player(player, "Jugador 1", world);
