@@ -2,10 +2,12 @@ package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,15 +15,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -41,22 +49,30 @@ import com.mygdx.game.objects.Bounds2;
 import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
+import com.mygdx.game.objects.Player2;
 
 
 /**
  * Created by MarcosPortatil on 18/04/2017.
  */
 
-public class PlayScreen extends BaseScreen {
+public class PlayScreen extends InputAdapter implements Screen {
     //Creamos el campo y los dos jugadores.
     Sprite pista, player, player2, disco;
-    Player jugador1, jugador2;
+    Player2 jugador1, jugador2;
     Disk disk;
     private Stage stage;
     Pista pistaHockey;
+    boolean prueba = true;
+
+    private Box2DDebugRenderer renderer;
+    private Body ball, ground;
+
+    private MouseJointDef jointDef;
+    private MouseJoint joint;
 
     private Box2DDebugRenderer debugRenderer;
-
+    private final float TIMESTEP = 1 / 60f;
     //Box2D
 
     public World world;
@@ -79,18 +95,15 @@ public class PlayScreen extends BaseScreen {
 
 
     public PlayScreen(AirHockey game) {
-        super(game);
         //Obtenemos la altura y anchura de la pantalla para poder escalar la imagen.
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
 
         System.out.println("With " + width + "\nHeight " + height);
         myAssetManager = new MyAssetManager();
-        Gdx.input.setInputProcessor(new InputHandler(this));
+
 
         angle = 0;
-
-
 
 
         debugRenderer = new Box2DDebugRenderer();
@@ -100,10 +113,10 @@ public class PlayScreen extends BaseScreen {
         float gameWidth = 203;
         float gameHeight = screenHeight / (screenWidth / gameWidth);
 
-        camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
+        camera = new OrthographicCamera(gameWidth / 10, gameHeight / 10);
         camera2 = new OrthographicCamera(gameWidth, gameHeight);
 
-            this.world = new World(new Vector2(0, 0), true);
+        this.world = new World(new Vector2(0, 0), true);
         //bounds2 = new Bounds2(world);
         // boundsGround = new BoundsGround(world);
         shapeRenderer = new ShapeRenderer();
@@ -121,25 +134,26 @@ public class PlayScreen extends BaseScreen {
         player = myAssetManager.cargarTextura("player");
         player2 = myAssetManager.cargarTextura("player");
 
-        pista.setSize(screenHeight,screenWidth);
+        pista.setSize(screenHeight, screenWidth);
 
-        disco.setSize(screenHeight/8, screenHeight/8);
-        player.setSize(screenHeight/5, screenHeight/5);
-        player2.setSize(screenHeight/5, screenHeight/5);
+        disco.setSize(screenHeight / 8, screenHeight / 8);
+        player.setSize(screenHeight / 5, screenHeight / 5);
+        player2.setSize(screenHeight / 5, screenHeight / 5);
 
 
         //Creación de actores
-        jugador1 = new Player(player, "Jugador 1", world);
+        // jugador1 = new Player2(player, "Jugador 1", world);
+        jugador1 = new Player2(world);
         disk = new Disk(0, 0, disco, pista.getHeight() / 2, pista.getWidth() / 2, world);
         pistaHockey = new Pista(pista, "pista", world);
         pistaHockey.setPosition(0, 0);
 
 
         stage.addActor(pistaHockey);
-        stage.addActor(jugador1);
-        stage.addActor(disk);
 
 
+        disk.getBody().setTransform(0, 0, 0);
+        Gdx.input.setInputProcessor(new InputHandler(this));
     }
 
     public Disk getDisk() {
@@ -153,7 +167,13 @@ public class PlayScreen extends BaseScreen {
         // player2.setPosition(width/2, (height/4)*3);
 
 
-        Gdx.input.setInputProcessor(new InputHandler(this));
+        Gdx.input.setInputProcessor(this);
+
+        // mouse joint
+        jointDef = new MouseJointDef();
+        jointDef.bodyA = disk.getBody();
+        jointDef.collideConnected = true;
+        jointDef.maxForce = 50;
 
     }
 
@@ -168,33 +188,33 @@ public class PlayScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
-
-        world.step(Gdx.graphics.getDeltaTime(), 100, 100);
-
-        //  disk.getBody().setLinearVelocity(0, 0);
-//        d.getBody().applyForce(-800f,100f,0,0,true);
-
-
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+
 
         camera.update();
         camera2.update();
         batch.setProjectionMatrix(camera2.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        force += 100f;
-        module = Math.sqrt(force * force + 100f * 100f);
-          //disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-        angle = 0;
-//
+
         stage.act(delta);
         stage.draw();
 
 
+        shapeRenderer.begin(ShapeType.Filled);
+        // Dibujar pelota
+        shapeRenderer.setColor(1, 1, 1, 1);
+        shapeRenderer.circle(disk.getBody().getPosition().x, disk.getBody().getPosition().y, disk.RADIUS, 32);
 
-        debugRenderer.render(world, camera2.combined);
+
+        shapeRenderer.end();
+
+
+        // debugRenderer.render(world, camera2.combined);
         debugRenderer.render(world, camera.combined);
+
         /**
          System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
          System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
@@ -212,24 +232,17 @@ public class PlayScreen extends BaseScreen {
                 Fixture fixtureA = contact.getFixtureA();
                 Fixture fixtureB = contact.getFixtureB();
 
+/**
+ if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
+ System.out.println("ENTRO AL IF");
+ Vector2 aux = jugador1.getBody().getLinearVelocity();
+ System.out.println(aux);
 
 
+ //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
 
-                if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
-                    System.out.println("ENTRO AL IF");
-                    Vector2 aux = jugador1.getBody().getLinearVelocity();
-                    jugador1.getBody().setLinearVelocity(0, 0);
-                    System.out.println(aux);
-                    disk.getBody().setLinearVelocity(new Vector2(1, 1));
-
-
-                  //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-
-
-
-                }
-
-
+ }
+ **/
 
             }
 
@@ -281,14 +294,71 @@ public class PlayScreen extends BaseScreen {
     @Override
     public void dispose() {
         myAssetManager.getTextureAtlas().dispose();
+        world.dispose();
+        shapeRenderer.dispose();
+        debugRenderer.dispose();
 
     }
 
-    public Player getJugador1() {
+    public Player2 getJugador1() {
         return jugador1;
     }
 
     public Stage getStage() {
         return stage;
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
+
+
+    private Vector3 tmp = new Vector3();
+    private Vector2 tmp2 = new Vector2();
+
+    private QueryCallback queryCallback = new QueryCallback() {
+
+        @Override
+        public boolean reportFixture(Fixture fixture) {
+            if (!fixture.testPoint(tmp.x, tmp.y))
+                return true;
+
+            jointDef.bodyB = fixture.getBody();
+            jointDef.target.set(tmp.x, tmp.y);
+            joint = (MouseJoint) world.createJoint(jointDef);
+            return false;
+        }
+
+    };
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        camera.unproject(tmp.set(screenX, screenY, 0));
+        world.QueryAABB(queryCallback, tmp.x, tmp.y, tmp.x, tmp.y);
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (joint == null)
+            return false;
+
+        camera.unproject(tmp.set(screenX, screenY, 0));
+        joint.setTarget(tmp2.set(tmp.x, tmp.y));
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (joint == null)
+            return false;
+
+        world.destroyJoint(joint);
+        joint = null;
+        return true;
     }
 }

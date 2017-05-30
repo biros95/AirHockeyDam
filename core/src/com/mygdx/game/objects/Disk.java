@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
  * Created by MarcosPortatil on 19/04/2017.
  */
 
-public class Disk extends Actor implements ContactFilter, ContactListener {
+public class Disk implements ContactFilter, ContactListener {
     //Box2D
     private Body body;
     private Fixture fixture;
@@ -46,8 +46,6 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         this.anchura = anchura;
         circle = new Circle();
 
-        setBounds(anchura, altura, sprite.getWidth(), sprite.getHeight());
-        circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
 
         //Box 2d
 
@@ -56,11 +54,11 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
 
         // body definition
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(0, 0);
 
         // ball shape
         CircleShape ballShape = new CircleShape();
-        RADIUS = sprite.getHeight()/2;
+        RADIUS = .2f;
         ballShape.setRadius(RADIUS);
 
 
@@ -75,8 +73,8 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
-
         ballShape.dispose();
+        body.setTransform(0,0,0);
 
     }
 
@@ -96,7 +94,7 @@ public class Disk extends Actor implements ContactFilter, ContactListener {
         System.out.println( body.getLinearVelocity());
         batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
 
-//        body.setTransform(getX(), getY(), 0);
+//
     }
 
     @Override
