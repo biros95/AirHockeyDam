@@ -92,7 +92,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Take me to the game screen!
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.optionsScreen);
             }
         });
 
@@ -118,7 +118,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Take me to the game screen!
-                game.setScreen(game.gameScreen);
+
             }
         });
         stage = new Stage(new FitViewport(ancho,altura));

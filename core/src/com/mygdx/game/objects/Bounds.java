@@ -82,7 +82,6 @@ public class Bounds implements ContactFilter, ContactListener {
         lados.createChain(new Vector2[]{new Vector2(1400, 950), new Vector2(830, 950)});
 
         fixtureDef.shape = lados;
-
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
