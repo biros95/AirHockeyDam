@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  * Created by MarcosPortatil on 18/04/2017.
  */
 
-public class Player  {
+public class Player extends Actor {
     private Sprite sprite;
     private String name;
     private Circle circle;
@@ -39,27 +39,27 @@ public class Player  {
         this.sprite = sprite;
         this.name = name;
         circle = new Circle();
-
+        setX(getWidth()/2);
+        setY(getHeight()/2);
+     setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
        // circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
-
+        setTouchable(Touchable.enabled);
 
 
 
         //Box2d
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(10, 0);
-
         FixtureDef fixtureDef = new FixtureDef();
         this.world = world;
 
         // body definition
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(0, 50);
+        bodyDef.position.set(getWidth()/2, getHeight()/2);
 
         // ball shape
         CircleShape ballShape = new CircleShape();
-        RADIUS = .4f;
+        RADIUS = sprite.getHeight()/2;
         ballShape.setRadius(RADIUS);
 
 
@@ -76,8 +76,6 @@ public class Player  {
 
         ballShape.dispose();
 
-        body.setTransform(0,0,0);
-
     }
 
     /**
@@ -86,7 +84,6 @@ public class Player  {
      * @param batch
      * @param parentAlpha
      */
-    /**
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
@@ -105,7 +102,7 @@ public class Player  {
         setBounds(getX(), getY(), getWidth(), getHeight());
         circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
     }
-**/
+
 
     //GETTERS Y SETTERS
 

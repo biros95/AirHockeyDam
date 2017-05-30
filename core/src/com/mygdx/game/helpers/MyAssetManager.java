@@ -33,6 +33,11 @@ public class MyAssetManager  {
           manager.load("audio/die.ogg", Sound.class);
           manager.load("audio/jump.ogg", Sound.class);
           manager.load("audio/song.ogg", Music.class);
+          manager.load("1Player.png",Texture.class);
+         manager.load("2Player.png",Texture.class);
+         manager.load("LogoPequeño.png",Texture.class);
+         manager.load("Options.png",Texture.class);
+         manager.load("button.png",Texture.class);
 
      }
 
