@@ -38,7 +38,16 @@ public class MyAssetManager  {
          manager.load("LogoPequeño.png",Texture.class);
          manager.load("Options.png",Texture.class);
          manager.load("button.png",Texture.class);
-
+         manager.load("Options2.png",Texture.class);
+         manager.load("PUCK.png",Texture.class);
+         manager.load("MALLET.png",Texture.class);
+         manager.load("Atras.jpg",Texture.class);
+         manager.load("MALLETS.png",Texture.class);
+         manager.load("MUSIC.png",Texture.class);
+         manager.load("OFF.png",Texture.class);
+         manager.load("ON.png",Texture.class);
+         manager.load("Options2.png",Texture.class);
+         manager.load("puck2.png",Texture.class);
      }
 
      public Sprite cargarTextura(String textura){
