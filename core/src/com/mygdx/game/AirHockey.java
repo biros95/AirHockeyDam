@@ -12,6 +12,7 @@ import com.mygdx.game.helpers.MyAssetManager;
 import com.mygdx.game.screens.BaseScreen;
 import com.mygdx.game.screens.GameOverScreen;
 import com.mygdx.game.screens.MenuScreen;
+import com.mygdx.game.screens.MouseJointTutorial;
 import com.mygdx.game.screens.PlayScreen;
 import com.mygdx.game.screens.SplashScreen;
 
@@ -20,7 +21,8 @@ public class AirHockey extends Game implements ApplicationListener {
 	public static int HEIGHT;
 	private MyAssetManager manager;
 
-	public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, creditsScreen;
+	public BaseScreen loadingScreen, menuScreen, gameOverScreen, creditsScreen;
+	public PlayScreen gameScreen;
 	@Override
 	public void create () {
 		manager = new MyAssetManager();
@@ -64,7 +66,8 @@ public class AirHockey extends Game implements ApplicationListener {
 		menuScreen = new MenuScreen(this);
 		gameScreen = new PlayScreen(this);
 		gameOverScreen = new GameOverScreen(this);
-		setScreen(menuScreen);
+		MouseJointTutorial ms = new MouseJointTutorial();
+		setScreen(gameScreen);
 	}
 
 

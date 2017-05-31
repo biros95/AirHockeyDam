@@ -43,10 +43,9 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         fixtureDef.density = 1;
 
 
-        float groundPos = -2.35f;
-        float topGroundPos = -2.5f;
-        float groundPos2 = -2.5f;
-        float topPos =7.35f;
+        float groundPos = -19f;
+        float topGroundPos = 4.5f;
+        float topPos =10f;
         float leftWall = -4.65f;
         float rightWall =14.10f;
 
@@ -66,15 +65,15 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
 
 
 
-        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(-3.5f,groundPos)});
-        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-10,topPos), new Vector2(-3.5f,topPos)});
+        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20, groundPos), new Vector2(-3.5f,groundPos)});
+        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20,topPos), new Vector2(-3.5f,topPos)});
 
         groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
         groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
 
 
-        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -10), new Vector2(rightWall,10)});
-        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -10), new Vector2(leftWall,10)});
+        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -20), new Vector2(rightWall,20)});
+        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -20), new Vector2(leftWall,20)});
 
         // fixture definition
         fixtureDef.shape = groundShareBottomLeft;

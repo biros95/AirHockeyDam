@@ -58,7 +58,7 @@ public class Disk implements ContactFilter, ContactListener {
 
         // ball shape
         CircleShape ballShape = new CircleShape();
-        RADIUS = .2f;
+        RADIUS = 1.5f;
         ballShape.setRadius(RADIUS);
 
 
@@ -66,7 +66,8 @@ public class Disk implements ContactFilter, ContactListener {
         fixtureDef.shape = ballShape;
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
-        //fixtureDef.density = 0;
+
+        fixtureDef.density = 2;
 
 
 

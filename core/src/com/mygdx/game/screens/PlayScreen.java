@@ -108,8 +108,8 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        float screenWidth = 800;
-        float screenHeight = 400;
+        float screenWidth = 400;
+        float screenHeight = 600;
         float gameWidth = 203;
         float gameHeight = screenHeight / (screenWidth / gameWidth);
 
@@ -153,6 +153,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         disk.getBody().setTransform(0, 0, 0);
+        jugador1.getBody().setTransform(0, 1, 0);
         Gdx.input.setInputProcessor(new InputHandler(this));
     }
 
@@ -173,7 +174,7 @@ public class PlayScreen extends InputAdapter implements Screen {
         jointDef = new MouseJointDef();
         jointDef.bodyA = disk.getBody();
         jointDef.collideConnected = true;
-        jointDef.maxForce = 50;
+        jointDef.maxForce = 1000;
 
     }
 
@@ -190,7 +191,7 @@ public class PlayScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+
 
 
         camera.update();
@@ -203,10 +204,11 @@ public class PlayScreen extends InputAdapter implements Screen {
         stage.draw();
 
 
-        shapeRenderer.begin(ShapeType.Filled);
+       shapeRenderer.begin(ShapeType.Filled);
         // Dibujar pelota
-        shapeRenderer.setColor(1, 1, 1, 1);
+        shapeRenderer.setColor(Color.RED);
         shapeRenderer.circle(disk.getBody().getPosition().x, disk.getBody().getPosition().y, disk.RADIUS, 32);
+        shapeRenderer.circle(jugador1.getBody().getPosition().x, jugador1.getBody().getPosition().y, jugador1.RADIUS, 32);
 
 
         shapeRenderer.end();
@@ -214,6 +216,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         // debugRenderer.render(world, camera2.combined);
         debugRenderer.render(world, camera.combined);
+        world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 
         /**
          System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
@@ -329,6 +332,8 @@ public class PlayScreen extends InputAdapter implements Screen {
 
             jointDef.bodyB = fixture.getBody();
             jointDef.target.set(tmp.x, tmp.y);
+            jointDef.dampingRatio = 5f;
+            jointDef.frequencyHz = 60;
             joint = (MouseJoint) world.createJoint(jointDef);
             return false;
         }
@@ -349,6 +354,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         camera.unproject(tmp.set(screenX, screenY, 0));
         joint.setTarget(tmp2.set(tmp.x, tmp.y));
+
         return true;
     }
 
@@ -359,6 +365,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         world.destroyJoint(joint);
         joint = null;
+        jugador1.getBody().setLinearVelocity(0,0);
         return true;
     }
 }
