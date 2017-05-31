@@ -67,7 +67,7 @@ public class Disk implements ContactFilter, ContactListener {
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
 
-        fixtureDef.density = 2;
+        fixtureDef.density = 10;
 
 
 

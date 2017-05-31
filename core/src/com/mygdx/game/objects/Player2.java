@@ -24,12 +24,21 @@ public class Player2 {
         CircleShape ballShape = new CircleShape();
         RADIUS = 2f;
         ballShape.setRadius(RADIUS);
+
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
         bodyDef.fixedRotation=true;
         body = world.createBody(bodyDef);
-        body.createFixture(ballShape, 1);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = ballShape;
+        fixtureDef.friction = 0;
+        fixtureDef.restitution = 1;
+
+        fixtureDef.density = 500000;
+
+        body.createFixture(fixtureDef);
 
         ballShape.dispose();
 

@@ -174,7 +174,7 @@ public class PlayScreen extends InputAdapter implements Screen {
         jointDef = new MouseJointDef();
         jointDef.bodyA = disk.getBody();
         jointDef.collideConnected = true;
-        jointDef.maxForce = 1000;
+        jointDef.maxForce = 1;
 
     }
 
@@ -189,6 +189,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -332,8 +333,9 @@ public class PlayScreen extends InputAdapter implements Screen {
 
             jointDef.bodyB = fixture.getBody();
             jointDef.target.set(tmp.x, tmp.y);
-            jointDef.dampingRatio = 5f;
-            jointDef.frequencyHz = 60;
+            jointDef.dampingRatio = 0.0f;
+            jointDef.frequencyHz = 100;
+            jointDef.maxForce = 500000.0f * fixture.getBody().getMass();
             joint = (MouseJoint) world.createJoint(jointDef);
             return false;
         }

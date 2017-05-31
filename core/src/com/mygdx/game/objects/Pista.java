@@ -63,13 +63,23 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         ChainShape groundShareRight = new ChainShape();
         ChainShape groundShareLeft = new ChainShape();
 
-
+/**
 
         groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20, groundPos), new Vector2(-3.5f,groundPos)});
         groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20,topPos), new Vector2(-3.5f,topPos)});
 
         groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
         groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
+
+**/
+
+
+        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(-20f,groundPos)});
+        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(-20f,topPos)});
+
+        groundShareBottomRight.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(20f,groundPos)});
+        groundShareTopRight.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(20f,topPos)});
+
 
 
         groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -20), new Vector2(rightWall,20)});
