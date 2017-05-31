@@ -65,6 +65,8 @@ public class PlayScreen extends InputAdapter implements Screen {
     Pista pistaHockey;
     boolean prueba = true;
 
+    Vector2 maxVelocity;
+
     private Box2DDebugRenderer renderer;
     private Body ball, ground;
 
@@ -72,7 +74,8 @@ public class PlayScreen extends InputAdapter implements Screen {
     private MouseJoint joint;
 
     private Box2DDebugRenderer debugRenderer;
-    private final float TIMESTEP = 1 / 60f;
+    private final float TIMESTEP = 1f/60f;
+    private final float MAXVELOCITY = 50f;
     //Box2D
 
     public World world;
@@ -90,6 +93,7 @@ public class PlayScreen extends InputAdapter implements Screen {
     StretchViewport viewport;
     private SpriteBatch spriteBatch;
     OrthographicCamera camera, camera2;
+    boolean isBelowMaxVel;
     ShapeRenderer shapeRenderer;
     private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
 
@@ -107,7 +111,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         debugRenderer = new Box2DDebugRenderer();
-
+        maxVelocity = new Vector2(100,100);
         float screenWidth = 400;
         float screenHeight = 600;
         float gameWidth = 203;
@@ -195,7 +199,14 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
 
-        camera.update();
+        Vector2 velocity = disk.getBody().getLinearVelocity();
+        float speed = velocity.len();
+        if (speed > MAXVELOCITY) {
+            disk.getBody().setLinearVelocity(velocity.scl(MAXVELOCITY / speed));
+        }
+
+
+            camera.update();
         camera2.update();
         batch.setProjectionMatrix(camera2.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
