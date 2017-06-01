@@ -50,6 +50,7 @@ import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Pista;
 import com.mygdx.game.objects.Player;
 import com.mygdx.game.objects.Player2;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 
 /**
@@ -102,6 +103,7 @@ public class PlayScreen extends InputAdapter implements Screen {
     private final int VELOCITYITERATIONS = 20, POSITIONITERATIONS = 3;
     int pointerPlayer1, pointerPlayer2, pointerActual;
     boolean jugador1Touched = false, jugador2Touched = false;
+    int puntuacionJugador1, puntuacionJugador2;
 
 
     public PlayScreen(AirHockey game) {
@@ -257,6 +259,8 @@ public class PlayScreen extends InputAdapter implements Screen {
          //System.out.println("Posicion del suelo: " + boundsGround.getBody().getPosition().x + ", " + boundsGround.getBody().getPosition().y);
          System.out.printf("Posicion del jugador " + jugador1.getX() + " ," + jugador1.getY());
          **/
+      comprobarGol(disk.getBody());
+
         createCollisionListener();
     }
 
@@ -453,6 +457,31 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         return jointDef;
     }
+    private void resetearPosiciones(boolean jugador){
+        disk.getBody().setLinearVelocity(0,0);
+
+
+        jugador1.getBody().setTransform(0, 10,0);
+        jugador2.getBody().setTransform(0, -10,0);
+        if (jugador){
+            disk.getBody().setTransform(0,3,0);
+        }
+        else{
+            disk.getBody().setTransform(0,-3,0);
+        }
+    }
+    public void comprobarGol(Body disco){
+        if (disco.getPosition().y >20){
+            resetearPosiciones(true);
+            System.out.println("Gol jugador 2");
+        }
+        if (disco.getPosition().y<-20){
+            resetearPosiciones(false);
+            System.out.println("Gol jugador 1");
+
+        }
+    }
+
     //pausa
     @Override
     public boolean keyDown(int keycode) {
