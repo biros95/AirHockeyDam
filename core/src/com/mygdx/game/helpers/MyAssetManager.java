@@ -1,10 +1,12 @@
 package com.mygdx.game.helpers;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -16,9 +18,11 @@ public class MyAssetManager  {
 
     AssetManager manager;
     TextureAtlas textureAtlas;
+    public static BitmapFont font;
      public MyAssetManager() {
          manager = new AssetManager();
          textureAtlas = new TextureAtlas("textures.txt");
+         font = new BitmapFont(Gdx.files.internal("calibri.fnt"),Gdx.files.internal("calibri.png"),false);
      }
 
      public void load(){

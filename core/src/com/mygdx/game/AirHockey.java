@@ -13,6 +13,7 @@ import com.mygdx.game.screens.BaseScreen;
 import com.mygdx.game.screens.GameOverScreen;
 import com.mygdx.game.screens.MenuScreen;
 import com.mygdx.game.screens.MouseJointTutorial;
+import com.mygdx.game.screens.OptionsScreen;
 import com.mygdx.game.screens.PlayScreen;
 import com.mygdx.game.screens.SplashScreen;
 
@@ -66,6 +67,7 @@ public class AirHockey extends Game implements ApplicationListener {
 		menuScreen = new MenuScreen(this);
 		gameScreen = new PlayScreen(this);
 		gameOverScreen = new GameOverScreen(this);
+		optionsScreen = new OptionsScreen(this);
 		MouseJointTutorial ms = new MouseJointTutorial();
 		setScreen(gameScreen);
 	}

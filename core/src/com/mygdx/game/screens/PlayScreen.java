@@ -63,7 +63,7 @@ public class PlayScreen extends InputAdapter implements Screen {
     Disk disk;
     private Stage stage;
     Pista pistaHockey;
-    boolean prueba = true;
+    boolean pause = false;
 
     Vector2 maxVelocity;
 
@@ -75,6 +75,7 @@ public class PlayScreen extends InputAdapter implements Screen {
     private Vector3 touchPositionPlayer1 = new Vector3();
     private Vector3 touchPositionPlayer2 = new Vector3();
     private MouseJoint joint1, joint2;
+
 
     private Box2DDebugRenderer debugRenderer;
     private final float TIMESTEP = 1f / 60f;
@@ -107,7 +108,7 @@ public class PlayScreen extends InputAdapter implements Screen {
         //Obtenemos la altura y anchura de la pantalla para poder escalar la imagen.
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-
+        pause = false;
         System.out.println("With " + width + "\nHeight " + height);
         myAssetManager = new MyAssetManager();
 
@@ -179,7 +180,7 @@ public class PlayScreen extends InputAdapter implements Screen {
         mouseJointDefPlayer1 = createMouseJointDefinition(disk.getBody());
         mouseJointDefPlayer2 = createMouseJointDefinition(disk.getBody());
         Gdx.input.setInputProcessor(this);
-
+        Gdx.input.setCatchBackKey(true);
         // mouse joint
 
 
@@ -235,12 +236,21 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         shapeRenderer.end();
-
-
+        System.out.println("PASUA: " + pause);
+        if(pause) {
+            batch.begin();
+            MyAssetManager.font.setColor(Color.BLUE);
+            MyAssetManager.font.draw(batch,"PAUSE",210,210);
+            batch.end();
+        }
         // debugRenderer.render(world, camera2.combined);
         debugRenderer.render(world, camera.combined);
-        world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-
+        //PAUSA
+        if(!pause) {
+            world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+        } else {
+            world.step(0, VELOCITYITERATIONS, POSITIONITERATIONS);
+            }
         /**
          System.out.println("Posicion del disco: " + disk.getBody().getPosition().x + ", " + disk.getBody().getPosition().y);
          System.out.println("Posición de la tejado: " + bounds.getBody().getPosition().x + ", " + bounds.getBody().getPosition().y);
@@ -293,7 +303,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
     @Override
     public void pause() {
-
+        pause = true;
     }
 
     @Override
@@ -331,6 +341,9 @@ public class PlayScreen extends InputAdapter implements Screen {
         this.camera = camera;
     }
 
+    public boolean isPaused() {
+        return pause;
+    }
 
     private Vector3 tmp = new Vector3();
     private Vector2 tmp2 = new Vector2();
@@ -371,7 +384,9 @@ public class PlayScreen extends InputAdapter implements Screen {
         camera.unproject(tmp.set(screenX, screenY, 0));
         pointerActual = pointer;
         world.QueryAABB(queryCallback, tmp.x, tmp.y, tmp.x, tmp.y);
-
+        if (this.isPaused()) {
+            pause = false;
+        }
         return true;
 
     }
@@ -384,23 +399,23 @@ public class PlayScreen extends InputAdapter implements Screen {
         /* Whether the input was processed */
         boolean processed = false;
 
-            if (joint1 != null && pointer == pointerPlayer1) {
+        if (joint1 != null && pointer == pointerPlayer1) {
 
 			/* Translate camera point to world point */
-                camera.unproject(touchPositionPlayer1.set(screenX, screenY, 0));
-                joint1.setTarget(new Vector2(touchPositionPlayer1.x, touchPositionPlayer1.y));
+            camera.unproject(touchPositionPlayer1.set(screenX, screenY, 0));
+            joint1.setTarget(new Vector2(touchPositionPlayer1.x, touchPositionPlayer1.y));
 
-                processed = true;
-            }
+            processed = true;
+        }
 
-            if (joint2 != null && pointer == pointerPlayer2) {
+        if (joint2 != null && pointer == pointerPlayer2) {
 
 			/* Translate camera point to world point */
-                camera.unproject(touchPositionPlayer2.set(screenX, screenY, 0));
-                joint2.setTarget(new Vector2(touchPositionPlayer2.x, touchPositionPlayer2.y));
+            camera.unproject(touchPositionPlayer2.set(screenX, screenY, 0));
+            joint2.setTarget(new Vector2(touchPositionPlayer2.x, touchPositionPlayer2.y));
 
-                processed = true;
-            }
+            processed = true;
+        }
 
 
         return processed;
@@ -437,5 +452,17 @@ public class PlayScreen extends InputAdapter implements Screen {
         jointDef.dampingRatio = 0.0f;
 
         return jointDef;
+    }
+    //pausa
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.BACK) {
+            if (this.isPaused()) {
+//                game.setScreen(new MenuScreen(game));
+            } else {
+                this.pause();
+            }
+        }
+        return false;
     }
 }

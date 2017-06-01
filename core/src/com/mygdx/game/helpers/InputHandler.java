@@ -1,6 +1,7 @@
 package com.mygdx.game.helpers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,10 +16,12 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.mygdx.game.AirHockey;
 import com.mygdx.game.objects.Disk;
 import com.mygdx.game.objects.Player;
 import com.mygdx.game.objects.Player2;
 import com.mygdx.game.screens.BaseScreen;
+import com.mygdx.game.screens.MenuScreen;
 import com.mygdx.game.screens.PlayScreen;
 
 /**
@@ -39,7 +42,7 @@ public class InputHandler implements InputProcessor {
     double module;
     private Stage stage;
     World world;
-
+    AirHockey game;
 
     private Long timer;
 
@@ -60,8 +63,9 @@ public class InputHandler implements InputProcessor {
         this.player = screen.getJugador1();
         this.stage = screen.getStage();
         this.disk = screen.getDisk();
-         world= playScreen.getWorld();
-      camera = playScreen.getCamera();
+        world = playScreen.getWorld();
+        camera = playScreen.getCamera();
+//        game = playScreen.getGame();
 
         // mouse joint
         jointDef = new MouseJointDef();
@@ -71,8 +75,17 @@ public class InputHandler implements InputProcessor {
 
     }
 
+
+
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.BACK) {
+//            if (playScreen.isPaused()) {
+//                game.setScreen(new MenuScreen(game));
+//            } else {
+//                playScreen.pauseGame();
+//            }
+        }
         return false;
     }
 
@@ -85,7 +98,6 @@ public class InputHandler implements InputProcessor {
     public boolean keyTyped(char character) {
         return false;
     }
-
 
 
     @Override
@@ -106,7 +118,7 @@ public class InputHandler implements InputProcessor {
 
         @Override
         public boolean reportFixture(Fixture fixture) {
-            if(!fixture.testPoint(tmp.x, tmp.y))
+            if (!fixture.testPoint(tmp.x, tmp.y))
                 return true;
 
             jointDef.bodyB = fixture.getBody();
@@ -122,12 +134,16 @@ public class InputHandler implements InputProcessor {
 
         camera.unproject(tmp.set(screenX, screenY, 0));
         world.QueryAABB(queryCallback, tmp.x, tmp.y, tmp.x, tmp.y);
+//        if(playScreen.isPaused()){
+//            playScreen.resumeGame();
+//        }
+
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if(joint == null)
+        if (joint == null)
             return false;
 
         camera.unproject(tmp.set(screenX, screenY, 0));
@@ -137,7 +153,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(joint == null)
+        if (joint == null)
             return false;
 
         world.destroyJoint(joint);
