@@ -70,11 +70,14 @@ public class PlayScreen extends InputAdapter implements Screen {
     private Box2DDebugRenderer renderer;
     private Body ball, ground;
 
-    private MouseJointDef jointDef;
-    private MouseJoint joint;
+    private MouseJointDef mouseJointDefPlayer1;
+    private MouseJointDef mouseJointDefPlayer2;
+    private Vector3 touchPositionPlayer1 = new Vector3();
+    private Vector3 touchPositionPlayer2 = new Vector3();
+    private MouseJoint joint1, joint2;
 
     private Box2DDebugRenderer debugRenderer;
-    private final float TIMESTEP = 1f/60f;
+    private final float TIMESTEP = 1f / 60f;
     private final float MAXVELOCITY = 50f;
     //Box2D
 
@@ -95,7 +98,9 @@ public class PlayScreen extends InputAdapter implements Screen {
     OrthographicCamera camera, camera2;
     boolean isBelowMaxVel;
     ShapeRenderer shapeRenderer;
-    private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
+    private final int VELOCITYITERATIONS = 20, POSITIONITERATIONS = 3;
+    int pointerPlayer1, pointerPlayer2, pointerActual;
+    boolean jugador1Touched = false, jugador2Touched = false;
 
 
     public PlayScreen(AirHockey game) {
@@ -111,7 +116,7 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         debugRenderer = new Box2DDebugRenderer();
-        maxVelocity = new Vector2(100,100);
+        maxVelocity = new Vector2(100, 100);
         float screenWidth = 400;
         float screenHeight = 600;
         float gameWidth = 203;
@@ -148,6 +153,7 @@ public class PlayScreen extends InputAdapter implements Screen {
         //Creación de actores
         // jugador1 = new Player2(player, "Jugador 1", world);
         jugador1 = new Player2(world);
+        jugador2 = new Player2(world);
         disk = new Disk(0, 0, disco, pista.getHeight() / 2, pista.getWidth() / 2, world);
         pistaHockey = new Pista(pista, "pista", world);
         pistaHockey.setPosition(0, 0);
@@ -157,8 +163,8 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         disk.getBody().setTransform(0, 0, 0);
-        jugador1.getBody().setTransform(0, 1, 0);
-        Gdx.input.setInputProcessor(new InputHandler(this));
+        jugador1.getBody().setTransform(0, 5, 0);
+        jugador2.getBody().setTransform(0, -5, 0);
     }
 
     public Disk getDisk() {
@@ -170,15 +176,12 @@ public class PlayScreen extends InputAdapter implements Screen {
 
 
         // player2.setPosition(width/2, (height/4)*3);
-
-
+        mouseJointDefPlayer1 = createMouseJointDefinition(disk.getBody());
+        mouseJointDefPlayer2 = createMouseJointDefinition(disk.getBody());
         Gdx.input.setInputProcessor(this);
 
         // mouse joint
-        jointDef = new MouseJointDef();
-        jointDef.bodyA = disk.getBody();
-        jointDef.collideConnected = true;
-        jointDef.maxForce = 1;
+
 
     }
 
@@ -193,20 +196,15 @@ public class PlayScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
 
         Vector2 velocity = disk.getBody().getLinearVelocity();
         float speed = velocity.len();
         if (speed > MAXVELOCITY) {
             disk.getBody().setLinearVelocity(velocity.scl(MAXVELOCITY / speed));
         }
-
-
-            camera.update();
+        camera.update();
         camera2.update();
         batch.setProjectionMatrix(camera2.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -216,11 +214,24 @@ public class PlayScreen extends InputAdapter implements Screen {
         stage.draw();
 
 
-       shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.begin(ShapeType.Filled);
         // Dibujar pelota
-        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.setColor(Color.GREEN);
+
         shapeRenderer.circle(disk.getBody().getPosition().x, disk.getBody().getPosition().y, disk.RADIUS, 32);
+
+        shapeRenderer.setColor(Color.RED);
+        if (jugador1.getBody().getPosition().y < 2.2f) {
+            jugador1.getBody().setTransform(jugador1.getBody().getPosition().x, 2.2f, 0);
+        }
+
         shapeRenderer.circle(jugador1.getBody().getPosition().x, jugador1.getBody().getPosition().y, jugador1.RADIUS, 32);
+        shapeRenderer.setColor(Color.BLUE);
+        if (jugador2.getBody().getPosition().y > -2.2f) {
+            System.out.println(jugador2.getBody().getPosition().y);
+            jugador2.getBody().setTransform(jugador2.getBody().getPosition().x, -2.2f, 0);
+        }
+        shapeRenderer.circle(jugador2.getBody().getPosition().x, jugador2.getBody().getPosition().y, jugador2.RADIUS, 32);
 
 
         shapeRenderer.end();
@@ -247,17 +258,6 @@ public class PlayScreen extends InputAdapter implements Screen {
                 Fixture fixtureA = contact.getFixtureA();
                 Fixture fixtureB = contact.getFixtureB();
 
-/**
- if (fixtureA == jugador1.getFixture() && fixtureB == disk.getFixture()) {
- System.out.println("ENTRO AL IF");
- Vector2 aux = jugador1.getBody().getLinearVelocity();
- System.out.println(aux);
-
-
- //  disk.getBody().applyForceToCenter((float) (module * Math.cos(angle)), (float) (module * Math.sin(angle)), true);
-
- }
- **/
 
             }
 
@@ -339,46 +339,103 @@ public class PlayScreen extends InputAdapter implements Screen {
 
         @Override
         public boolean reportFixture(Fixture fixture) {
-            if (!fixture.testPoint(tmp.x, tmp.y))
+            if (fixture.testPoint(tmp.x,
+                    tmp.y) && (fixture.getBody() == jugador1.getBody())) {
+                touchPositionPlayer1 = tmp;
+                pointerPlayer1 = pointerActual;
+                pointerPlayer1 = pointerActual;
+                mouseJointDefPlayer1.bodyB = fixture.getBody();
+                mouseJointDefPlayer1.target.set(touchPositionPlayer1.x, touchPositionPlayer1.y);
+                mouseJointDefPlayer1.maxForce = 200000.0f * fixture.getBody().getMass();
+                joint1 = (MouseJoint) world.createJoint(mouseJointDefPlayer1);
                 return true;
+            }
 
-            jointDef.bodyB = fixture.getBody();
-            jointDef.target.set(tmp.x, tmp.y);
-            jointDef.dampingRatio = 0.0f;
-            jointDef.frequencyHz = 100;
-            jointDef.maxForce = 500000.0f * fixture.getBody().getMass();
-            joint = (MouseJoint) world.createJoint(jointDef);
+            if (fixture.testPoint(tmp.x,
+                    tmp.y) && (fixture.getBody() == jugador2.getBody())) {
+                touchPositionPlayer2 = tmp;
+                pointerPlayer2 = pointerActual;
+                mouseJointDefPlayer2.bodyB = fixture.getBody();
+                mouseJointDefPlayer2.target.set(touchPositionPlayer2.x, touchPositionPlayer2.y);
+                mouseJointDefPlayer2.maxForce = 200000.0f * fixture.getBody().getMass();
+                joint2 = (MouseJoint) world.createJoint(mouseJointDefPlayer2);
+                return true;
+            }
+
             return false;
         }
-
     };
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         camera.unproject(tmp.set(screenX, screenY, 0));
+        pointerActual = pointer;
         world.QueryAABB(queryCallback, tmp.x, tmp.y, tmp.x, tmp.y);
+
         return true;
+
     }
 
     @Override
+
+
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (joint == null)
-            return false;
 
-        camera.unproject(tmp.set(screenX, screenY, 0));
-        joint.setTarget(tmp2.set(tmp.x, tmp.y));
+        /* Whether the input was processed */
+        boolean processed = false;
 
-        return true;
+            if (joint1 != null && pointer == pointerPlayer1) {
+
+			/* Translate camera point to world point */
+                camera.unproject(touchPositionPlayer1.set(screenX, screenY, 0));
+                joint1.setTarget(new Vector2(touchPositionPlayer1.x, touchPositionPlayer1.y));
+
+                processed = true;
+            }
+
+            if (joint2 != null && pointer == pointerPlayer2) {
+
+			/* Translate camera point to world point */
+                camera.unproject(touchPositionPlayer2.set(screenX, screenY, 0));
+                joint2.setTarget(new Vector2(touchPositionPlayer2.x, touchPositionPlayer2.y));
+
+                processed = true;
+            }
+
+
+        return processed;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (joint == null)
-            return false;
 
-        world.destroyJoint(joint);
-        joint = null;
-        jugador1.getBody().setLinearVelocity(0,0);
+        if (joint1 != null && pointerPlayer1 == pointer) {
+            world.destroyJoint(joint1);
+            jugador1.getBody().setLinearVelocity(0, 0);
+            joint1 = null;
+        }
+        if (joint2 != null && pointerPlayer2 == pointer) {
+            world.destroyJoint(joint2);
+            jugador2.getBody().setLinearVelocity(0, 0);
+            joint2 = null;
+        }
+
+
+        System.out.println("X= " + screenX + " Y=" + screenY);
+        System.out.println(pointer);
+
         return true;
+    }
+
+
+    private MouseJointDef createMouseJointDefinition(Body body) {
+        MouseJointDef jointDef;
+        jointDef = new MouseJointDef();
+        jointDef.bodyA = body;
+        jointDef.collideConnected = true;
+        jointDef.frequencyHz = 100;
+        jointDef.dampingRatio = 0.0f;
+
+        return jointDef;
     }
 }
