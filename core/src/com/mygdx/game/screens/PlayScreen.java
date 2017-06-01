@@ -459,13 +459,15 @@ public class PlayScreen extends InputAdapter implements Screen {
     public void comprobarGol(Body disco){
         if (disco.getPosition().y >20){
             resetearPosiciones(true);
-            System.out.println("Gol jugador 2");
+            puntuacionJugador1++;
         }
         if (disco.getPosition().y<-20){
             resetearPosiciones(false);
             System.out.println("Gol jugador 1");
+            puntuacionJugador2++;
 
         }
+        System.out.println(puntuacionJugador1+" - "+puntuacionJugador2);
     }
 
 }
