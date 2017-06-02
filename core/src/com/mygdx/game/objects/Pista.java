@@ -25,24 +25,29 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Pista extends Actor  implements ContactFilter, ContactListener {
 
     private Sprite sprite;
-    private String name;
     private float posX, posY;
+    private String name;
     private Body body;
     private Fixture fixture;
 
-
+    /**
+     * Constructor de la clase Pista.
+     * @param sprite
+     * @param name
+     * @param world
+     */
     public Pista(Sprite sprite, String name, World world) {
         this.sprite = sprite;
         this.name = name;
         this.posX = sprite.getX();
         this.posY = sprite.getY();
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
-
+        //Inicializar body
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1;
 
-
+        //Paredes
         float groundPos = -19f;
         float topGroundPos = 4.5f;
         float topPos =10f;
@@ -64,23 +69,13 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         ChainShape groundShareLeft = new ChainShape();
 
 
-
+        //Establecer las posiciones de las paredes.
         groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20, groundPos), new Vector2(-3.5f,groundPos)});
         groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20,topPos), new Vector2(-3.5f,topPos)});
 
         groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
         groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
 
-
-/** PORTERIA CERRADA
-        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(-20f,groundPos)});
-        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(-20f,topPos)});
-
-        groundShareBottomRight.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(20f,groundPos)});
-        groundShareTopRight.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(20f,topPos)});
-
-
-**/
         groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -20), new Vector2(rightWall,20)});
         groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -20), new Vector2(leftWall,20)});
 
@@ -109,10 +104,7 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
-
-
         bodyDef.position.set(leftWall,0 );
-        // fixture definition
 
         fixtureDef.shape = groundShareLeft;
 
@@ -124,12 +116,8 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
-
-
         groundShareTopLeft.dispose();
         groundShareBottomLeft.dispose();
-
-
     }
 
     @Override

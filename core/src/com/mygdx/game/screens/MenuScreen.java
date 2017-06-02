@@ -53,7 +53,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
         TextureRegionDrawable drawable1Jugador = new TextureRegionDrawable(textureRegion1jugador);
         boton1Jugador = new ImageButton(drawable1Jugador);
         boton1Jugador.setPosition(300,150);
-        boton1Jugador.setBounds(ancho/2-150,altura/2 - Tboton1Jugador.getHeight(), 300, 300);
+        boton1Jugador.setBounds(ancho/2 - 100,altura/2 - Tboton1Jugador.getHeight(), altura/4, ancho/8);
         boton1Jugador.getImageCell().expand().fill();
         boton1Jugador.addCaptureListener(new ChangeListener() {
             @Override
@@ -68,7 +68,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
         TextureRegionDrawable drawable1Jugador2 = new TextureRegionDrawable(textureRegion1jugador2);
         boton2Jugadores = new ImageButton(drawable1Jugador2);
         boton2Jugadores.setPosition(ancho/2 - 100,altura/2 - Tboton2Jugadores.getHeight() - 300);
-        boton2Jugadores.setBounds(ancho/2 - 150,altura/2 - Tboton2Jugadores.getHeight() - 150, 300, 300);
+        boton2Jugadores.setBounds(ancho/2 - 100,altura/2 - Tboton2Jugadores.getHeight() - 100,  altura/4, ancho/8);
         boton2Jugadores.getImageCell().expand().fill();
 
         boton2Jugadores.addCaptureListener(new ChangeListener() {
@@ -85,7 +85,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
         TextureRegionDrawable drawable1Jugador3 = new TextureRegionDrawable(textureRegion1jugador3);
         botonConfiguracion = new ImageButton(drawable1Jugador3);
         botonConfiguracion.setPosition( ancho / 2f - 100f,altura/2 - TbotonConfiguracion.getHeight()-1);
-        botonConfiguracion.setBounds( ancho / 2f - 150f,altura/2 - TbotonConfiguracion.getHeight()-300, 300, 300);
+        botonConfiguracion.setBounds( ancho/2 - 100,altura/2 - TbotonConfiguracion.getHeight() - 200,  altura/4, ancho/8);
         botonConfiguracion.getImageCell().expand().fill();
 
         botonConfiguracion.addCaptureListener(new ChangeListener() {
@@ -102,7 +102,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
         TextureRegionDrawable drawable1Jugador4 = new TextureRegionDrawable(textureRegion1jugador4);
         logo = new ImageButton(drawable1Jugador4);
         logo.setPosition(ancho - ancho/2-Tlogo.getWidth(),altura/2);
-        logo.setBounds(ancho/2 - 150, altura/2+ Tlogo.getHeight(), 300, 300);
+        logo.setBounds(ancho/4 -270, altura/4 + 290, altura - 100, ancho - 200);
         logo.getImageCell().expand().fill();
 
         //BOTON DE SALIR
@@ -111,7 +111,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
         TextureRegionDrawable drawable1Jugador5 = new TextureRegionDrawable(textureRegion1jugador5);
         botonSalir = new ImageButton(drawable1Jugador5);
         botonSalir.setPosition(ancho/2 - 100,altura/2 - TbotonSalir.getHeight() - 450);
-        botonSalir.setBounds(ancho/2 - 150,altura/2 - TbotonSalir.getHeight() - 450, 300, 300);
+        botonSalir.setBounds(ancho/2 - 100,altura/2 - TbotonConfiguracion.getHeight() - 300,  altura/4, ancho/8);
         botonSalir.getImageCell().expand().fill();
 
         botonSalir.addCaptureListener(new ChangeListener() {

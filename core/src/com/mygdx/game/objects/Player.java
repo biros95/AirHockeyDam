@@ -41,8 +41,7 @@ public class Player extends Actor {
         circle = new Circle();
         setX(getWidth()/2);
         setY(getHeight()/2);
-     setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
-       // circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
+        setBounds(getX(), getY(), sprite.getWidth(), sprite.getHeight());
         setTouchable(Touchable.enabled);
 
 

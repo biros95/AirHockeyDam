@@ -46,11 +46,6 @@ public class Bounds implements ContactFilter, ContactListener {
         ChainShape lados = new ChainShape();
 
 
-		/*
-        groundShape.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(10,groundPos),
-				new Vector2(10, 8.35f), new Vector2(-10,8.35f), new Vector2(-10,groundPos)});
-		*/
-
        groundShapeTop.createChain(new Vector2[]{new Vector2(topPos, 4000), new Vector2(topPos, 0)});
         //groundShapeTop.createChain(new Vector2[]{new Vector2(100, 4000), new Vector2(100, 0)});
 

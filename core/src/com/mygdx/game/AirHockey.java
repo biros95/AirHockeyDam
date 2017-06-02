@@ -69,7 +69,7 @@ public class AirHockey extends Game implements ApplicationListener {
 		gameOverScreen = new GameOverScreen(this);
 		optionsScreen = new OptionsScreen(this);
 		MouseJointTutorial ms = new MouseJointTutorial();
-		setScreen(gameScreen);
+		setScreen(menuScreen);
 	}
 
 
