@@ -16,27 +16,30 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player2 {
     Body body;
+    BodyDef bodyDef;
+    FixtureDef fixtureDef;
 
     float width = Gdx.graphics.getWidth();
     public final float RADIUS;
 
     public Player2(World world) {
         CircleShape ballShape = new CircleShape();
-        RADIUS = 2f;
+        RADIUS = 1.7f;
         ballShape.setRadius(RADIUS);
 
-        BodyDef bodyDef = new BodyDef();
+        bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
 
         bodyDef.fixedRotation=true;
         body = world.createBody(bodyDef);
 
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = ballShape;
-        fixtureDef.friction = 0;
-        fixtureDef.restitution = 1;
 
-        fixtureDef.density = 500000;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution = 0f;
+
+        fixtureDef.density = 2000000;
 
         body.createFixture(fixtureDef);
 
@@ -44,8 +47,23 @@ public class Player2 {
 
     }
 
+    public BodyDef getBodyDef() {
+        return bodyDef;
+    }
+
+    public FixtureDef getFixtureDef() {
+        return fixtureDef;
+    }
+
+    public void setFixtureDef(FixtureDef fixtureDef) {
+        this.fixtureDef = fixtureDef;
+    }
 
     public Body getBody() {
         return body;
     }
+
+
+
+
 }

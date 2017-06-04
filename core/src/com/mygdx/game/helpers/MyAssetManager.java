@@ -18,11 +18,13 @@ public class MyAssetManager  {
 
     AssetManager manager;
     TextureAtlas textureAtlas;
-    public static BitmapFont font;
+    public static BitmapFont font, fuenteMarcador, fuenteMarcadorInvert;
      public MyAssetManager() {
          manager = new AssetManager();
          textureAtlas = new TextureAtlas("textures.txt");
          font = new BitmapFont(Gdx.files.internal("calibri.fnt"),Gdx.files.internal("calibri.png"),false);
+         fuenteMarcador = new BitmapFont(Gdx.files.internal("lcd.fnt"),Gdx.files.internal("lcd.png"),false);
+         fuenteMarcadorInvert = new BitmapFont(Gdx.files.internal("lcd.fnt"),Gdx.files.internal("lcd.png"),false);
      }
 
      public void load(){

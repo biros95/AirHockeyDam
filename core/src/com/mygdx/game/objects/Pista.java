@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * Created by MarcosPortatil on 16/05/2017.
  */
 
-public class Pista extends Actor  implements ContactFilter, ContactListener {
+public class Pista extends Actor  {
 
     private Sprite sprite;
     private String name;
@@ -38,96 +38,6 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         this.posY = sprite.getY();
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
 
-        BodyDef bodyDef = new BodyDef();
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 1;
-
-
-        float groundPos = -19f;
-        float topGroundPos = 4.5f;
-        float topPos =10f;
-        float leftWall = -4.65f;
-        float rightWall =14.10f;
-
-        // body definition
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(0, topGroundPos);
-
-        // ground shape
-        ChainShape groundShareBottomLeft= new ChainShape();
-        ChainShape groundShareBottomRight = new ChainShape();
-
-        ChainShape groundShareTopRight = new ChainShape();
-        ChainShape groundShareTopLeft = new ChainShape();
-
-        ChainShape groundShareRight = new ChainShape();
-        ChainShape groundShareLeft = new ChainShape();
-
-
-
-        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20, groundPos), new Vector2(-3.5f,groundPos)});
-        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20,topPos), new Vector2(-3.5f,topPos)});
-
-        groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
-        groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
-
-
-/** PORTERIA CERRADA
-        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(-20f,groundPos)});
-        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(-20f,topPos)});
-
-        groundShareBottomRight.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(20f,groundPos)});
-        groundShareTopRight.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(20f,topPos)});
-
-
-**/
-        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -20), new Vector2(rightWall,20)});
-        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -20), new Vector2(leftWall,20)});
-
-        // fixture definition
-        fixtureDef.shape = groundShareBottomLeft;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-        // fixture definition
-        fixtureDef.shape = groundShareTopLeft;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-
-        // fixture definition
-        fixtureDef.shape = groundShareBottomRight;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-        // fixture definition
-        fixtureDef.shape = groundShareTopRight;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-
-
-        bodyDef.position.set(leftWall,0 );
-        // fixture definition
-
-        fixtureDef.shape = groundShareLeft;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-        // fixture definition
-        fixtureDef.shape = groundShareRight;
-
-        body = world.createBody(bodyDef);
-        fixture = body.createFixture(fixtureDef);
-
-
-        groundShareTopLeft.dispose();
-        groundShareBottomLeft.dispose();
 
 
     }
@@ -141,28 +51,5 @@ public class Pista extends Actor  implements ContactFilter, ContactListener {
         batch.draw(sprite, 0, 0, sprite.getWidth(), sprite.getHeight());
     }
 
-    @Override
-    public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
-        return false;
-    }
 
-    @Override
-    public void beginContact(Contact contact) {
-
-    }
-
-    @Override
-    public void endContact(Contact contact) {
-
-    }
-
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
-
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-
-    }
 }

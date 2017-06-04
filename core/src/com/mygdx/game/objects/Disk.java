@@ -50,6 +50,7 @@ public class Disk implements ContactFilter, ContactListener {
         //Box 2d
 
         bodyDef = new BodyDef();
+        bodyDef.bullet=true;
         FixtureDef fixtureDef = new FixtureDef();
 
         // body definition
@@ -58,7 +59,7 @@ public class Disk implements ContactFilter, ContactListener {
 
         // ball shape
         CircleShape ballShape = new CircleShape();
-        RADIUS = 1.5f;
+        RADIUS = 1f;
         ballShape.setRadius(RADIUS);
 
 
@@ -67,15 +68,14 @@ public class Disk implements ContactFilter, ContactListener {
         fixtureDef.friction = 0;
         fixtureDef.restitution = 1;
 
-        fixtureDef.density = 10;
-
+        fixtureDef.density = 100;
 
 
         body = world.createBody(bodyDef);
         fixture = body.createFixture(fixtureDef);
 
         ballShape.dispose();
-        body.setTransform(0,0,0);
+        body.setTransform(0, 0, 0);
 
     }
 
@@ -87,27 +87,21 @@ public class Disk implements ContactFilter, ContactListener {
      * @param batch
      * @param parentAlpha
      */
-  /**  @Override
-    public void draw(Batch batch, float parentAlpha) {
-
-        Color color = getColor();
-        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-        System.out.println( body.getLinearVelocity());
-        batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
-
-//
-    }
-
-    @Override
-    public void act(float delta) {
-        setBounds(getX(), getY(), getWidth(), getHeight());
-        circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
-    }
-**/
+    /**
+     * @Override public void draw(Batch batch, float parentAlpha) {
+     * Color color = getColor();
+     * batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+     * System.out.println( body.getLinearVelocity());
+     * batch.draw(sprite, body.getPosition().x-sprite.getHeight()/2,body.getPosition().y-sprite.getWidth()/2 , getWidth(), getHeight());
+     * //
+     * }
+     * @Override public void act(float delta) {
+     * setBounds(getX(), getY(), getWidth(), getHeight());
+     * circle.set(getX() + getWidth() / 2.0f, getY() + getWidth() / 2.0f, getWidth() / 2.0f);
+     * }
+     **/
 
     //GETTERS
-
-
     public Circle getCircle() {
         return circle;
     }
@@ -136,11 +130,12 @@ public class Disk implements ContactFilter, ContactListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
     }
-    public Body getBody(){
+
+    public Body getBody() {
         return body;
     }
 
-    public Fixture getFixture(){
+    public Fixture getFixture() {
         return fixture;
     }
 

@@ -1,18 +1,13 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.helpers.MyAssetManager;
 import com.mygdx.game.screens.BaseScreen;
 import com.mygdx.game.screens.GameOverScreen;
 import com.mygdx.game.screens.MenuScreen;
-import com.mygdx.game.screens.MouseJointTutorial;
 import com.mygdx.game.screens.OptionsScreen;
 import com.mygdx.game.screens.PlayScreen;
 import com.mygdx.game.screens.SplashScreen;
@@ -68,8 +63,7 @@ public class AirHockey extends Game implements ApplicationListener {
 		gameScreen = new PlayScreen(this);
 		gameOverScreen = new GameOverScreen(this);
 		optionsScreen = new OptionsScreen(this);
-		MouseJointTutorial ms = new MouseJointTutorial();
-		setScreen(gameScreen);
+		setScreen(menuScreen);
 	}
 
 

@@ -136,7 +136,6 @@ public class MenuScreen extends  BaseScreen implements Screen {
 
         stage.addActor(boton1Jugador);
         stage.draw();
-        System.out.println("Posicion x: " + boton1Jugador.getX());
         stage.addActor(boton2Jugadores);
         stage.addActor(botonConfiguracion);
         stage.addActor(botonSalir);
@@ -175,5 +174,7 @@ public class MenuScreen extends  BaseScreen implements Screen {
     public void dispose() {
 
     }
+
+
 
 }

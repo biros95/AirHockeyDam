@@ -16,28 +16,27 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Bounds2 extends Actor implements ContactFilter, ContactListener {
+public class BoundWall implements ContactFilter, ContactListener {
 
     private Body body;
     private Fixture fixture;
 
-    public Bounds2(World world) {
+    public BoundWall(World world) {
 
         BodyDef bodyDef = new BodyDef();
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1;
 
 
-        float groundPos = -2.35f;
-        float topGroundPos = -2.5f;
-        float groundPos2 = -2.5f;
-        float topPos =7.35f;
+        float groundPos = -19f;
+        float topGroundPos = 4.5f;
+        float topPos =10f;
         float leftWall = -4.65f;
         float rightWall =14.10f;
 
         // body definition
-        bodyDef.type = BodyType.StaticBody;
-       bodyDef.position.set(0, topGroundPos);
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(0, topGroundPos);
 
         // ground shape
         ChainShape groundShareBottomLeft= new ChainShape();
@@ -51,15 +50,24 @@ public class Bounds2 extends Actor implements ContactFilter, ContactListener {
 
 
 
-        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(-3.5f,groundPos)});
-        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-10,topPos), new Vector2(-3.5f,topPos)});
+        groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20, groundPos), new Vector2(-3.5f,groundPos)});
+        groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20,topPos), new Vector2(-3.5f,topPos)});
 
         groundShareBottomRight.createChain(new Vector2[] {new Vector2(3.5f, groundPos), new Vector2(10f,groundPos)});
         groundShareTopRight.createChain(new Vector2[] {new Vector2(3.5f,topPos), new Vector2(10f,topPos)});
 
 
-        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -10), new Vector2(rightWall,10)});
-        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -10), new Vector2(leftWall,10)});
+/** PORTERIA CERRADA
+ groundShareBottomLeft.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(-20f,groundPos)});
+ groundShareTopLeft.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(-20f,topPos)});
+
+ groundShareBottomRight.createChain(new Vector2[] {new Vector2(-20f, groundPos), new Vector2(20f,groundPos)});
+ groundShareTopRight.createChain(new Vector2[] {new Vector2(-20f,topPos), new Vector2(20f,topPos)});
+
+
+ **/
+        groundShareRight.createChain(new Vector2[] {new Vector2(rightWall, -20), new Vector2(rightWall,20)});
+        groundShareLeft.createChain(new Vector2[] {new Vector2(leftWall, -20), new Vector2(leftWall,20)});
 
         // fixture definition
         fixtureDef.shape = groundShareBottomLeft;
@@ -105,6 +113,7 @@ public class Bounds2 extends Actor implements ContactFilter, ContactListener {
 
         groundShareTopLeft.dispose();
         groundShareBottomLeft.dispose();
+
     }
 
     @Override
@@ -131,5 +140,9 @@ public class Bounds2 extends Actor implements ContactFilter, ContactListener {
     public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }
